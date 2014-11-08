@@ -5,6 +5,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +14,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.HomePagerAdapter;
 import cn.fython.carryingcat.support.Utility;
+import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -20,6 +22,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private PagerSlidingTabStrip mTabView;
 	private ViewPager mPager;
+	private FloatingActionButton mActionBtn;
 
 	private HomePagerAdapter mPagerAdapter;
 
@@ -41,13 +44,24 @@ public class MainActivity extends ActionBarActivity {
 
 		mPager.setAdapter(mPagerAdapter);
 		mTabView.setViewPager(mPager);
+
+		/** bind ActionButton **/
+		mActionBtn = new FloatingActionButton.Builder(this)
+				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
+				.withButtonColor(getResources().getColor(R.color.blue_500))
+				.withDrawable(getResources().getDrawable(R.drawable.ic_add_white_36dp))
+				.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
+				.withMargins(0, 0,
+						getResources().getDimensionPixelSize(R.dimen.action_button_margin),
+						getResources().getDimensionPixelSize(R.dimen.action_button_margin)
+				).create();
 	}
 
 	private void setUpActionBar() {
 		mActionBar = getSupportActionBar();
 		if (Utility.isLandscape(this)) {
 			mActionBar.setCustomView(R.layout.actionbar_custom_land);
-			mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_TITLE);
+			mActionBar.setDisplayShowCustomEnabled(true);
 		}
 	}
 
