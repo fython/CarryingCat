@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">搬喵</string>
+    <string name="action_settings">设置</string>
+	<string name="action_search">搜索</string>
+
+	<string-array name="home_tabs">
+		<item>我的视频</item>
+		<item>正在下载</item>
+	</string-array>
+
+</resources>

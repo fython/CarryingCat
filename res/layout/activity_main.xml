@@ -1,11 +1,38 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cn.fython.carryingcat.MainActivity" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res/cn.fython.carryingcat"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="cn.fython.carryingcat.ui.MainActivity">
 
-</RelativeLayout>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:background="@color/deep_purple_500">
+
+		<com.astuetz.PagerSlidingTabStrip
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:id="@+id/pager_tab"
+			android:layout_marginLeft="5dp"
+			android:layout_gravity="left"
+			android:textColor="@android:color/white"
+			app:pstsIndicatorColor="@android:color/white"
+			app:pstsIndicatorHeight="1dp"
+			app:pstsUnderlineColor="@android:color/transparent"/>
+
+	</FrameLayout>
+
+	<android.support.v4.view.ViewPager
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:paddingBottom="@dimen/activity_vertical_margin"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingRight="@dimen/activity_horizontal_margin"
+		android:paddingTop="@dimen/activity_vertical_margin"
+		android:id="@+id/pager"
+		android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

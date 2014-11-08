@@ -2,7 +2,12 @@
 <resources>
 
     <string name="app_name">CarryingCat</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+	<string name="action_search">Search</string>
+
+	<string-array name="home_tabs">
+		<item>My Video</item>
+		<item>Downloading</item>
+	</string-array>
 
 </resources>

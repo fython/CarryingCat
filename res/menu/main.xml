@@ -1,10 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cn.fython.carryingcat.MainActivity" >
+    tools:context="cn.fython.carryingcat.ui.MainActivity" >
+
+	<item
+		android:id="@+id/action_search"
+		android:orderInCategory="100"
+		android:showAsAction="always"
+		android:icon="@drawable/ic_search_white"
+		android:title="@string/action_search"/>
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="1010"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
 
