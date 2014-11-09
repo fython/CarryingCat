@@ -4,6 +4,11 @@
 	    <item name="colorPrimary">@color/deep_purple_500</item>
 	    <item name="colorAccent">@color/purple_300</item>
 	    <item name="colorControlNormal">@android:color/white</item>
+	    <item name="android:buttonStyle">@style/Widget.Material.Button.Teal</item>
     </style>
+
+	<style name="Widget.Material.Button.Teal" parent="android:Widget.Holo.Button">
+		<item name="android:background">@drawable/btn_default_holo_dark</item>
+	</style>
 
 </resources>
