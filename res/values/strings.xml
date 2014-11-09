@@ -10,4 +10,22 @@
 		<item>Downloading</item>
 	</string-array>
 
+	<string name="button_next">NEXT</string>
+	<string name="button_unable">UNABLE TO CLICK</string>
+	<string name="button_finish">FINISH</string>
+
+	<string name="activity_title_add_task">Add Task</string>
+
+	<string name="title_address">ADDRESS</string>
+	<string name="title_url">URL</string>
+	<string name="title_bilibili_no">BILIBILI AV NO.</string>
+	<string name="title_url_title">VIDEO TITLE</string>
+	<string name="result_available">AVAILABLE</string>
+	<string name="result_error">ERROR</string>
+
+	<string-array name="spinner_address_type">
+		<item>@string/title_url</item>
+		<item>@string/title_bilibili_no</item>
+	</string-array>
+
 </resources>

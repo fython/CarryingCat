@@ -10,4 +10,22 @@
 		<item>正在下载</item>
 	</string-array>
 
+	<string name="button_next">下一步</string>
+	<string name="button_unable">无法添加</string>
+	<string name="button_finish">完成</string>
+
+	<string name="activity_title_add_task">添加任务</string>
+
+	<string name="title_address">源地址</string>
+	<string name="title_url">网页地址</string>
+	<string name="title_bilibili_no">B站AV号</string>
+	<string name="title_url_title">视频标题</string>
+	<string name="result_available">下载可用</string>
+	<string name="result_error">错误</string>
+
+	<string-array name="spinner_address_type">
+		<item>@string/title_url</item>
+		<item>@string/title_bilibili_no</item>
+	</string-array>
+
 </resources>
