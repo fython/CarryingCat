@@ -2,15 +2,24 @@ package cn.fython.carryingcat.support;
 
 import java.util.ArrayList;
 
-public class VideoItem {
+public class VideoItem extends VideoSource {
 
-	public String name, path, websrc;
-	public ArrayList<String> sourceUrl, fileName;
+	public String path;
+	public ArrayList<String> fileName;
 
-	public VideoItem(String name, String path, ArrayList<String> sourceUrl, ArrayList<String> fileName) {
-		this.name = name;
+	public VideoItem(String name) {
+		super(name);
+	}
+	
+	public VideoItem(String name, String path) {
+		super(name);
 		this.path = path;
-		this.sourceUrl = sourceUrl;
+		this.fileName = new ArrayList<String>();
+	}
+	
+	public VideoItem(String name, String path, ArrayList<String> fileName) {
+		super(name);
+		this.path = path;
 		this.fileName = fileName;
 	}
 

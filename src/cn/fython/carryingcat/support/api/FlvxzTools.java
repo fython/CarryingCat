@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoSource;
+import cn.fython.carryingcat.support.VideoUrl;
 
 public class FlvxzTools {
 
@@ -60,9 +61,9 @@ public class FlvxzTools {
 		}
 
 		String videoTitle = null;
-		ArrayList<String> videoUrl, videoName;
-		videoUrl = new ArrayList<String>();
-		videoName = new ArrayList<String>();
+		ArrayList<VideoUrl> videoUrl;
+		int videoUrlCount = jsonArray.getCount();
+		videoUrl = new ArrayList<VideoUrl>();
 
 		// TODO Unfinished!!!
 
@@ -74,7 +75,7 @@ public class FlvxzTools {
 			e.printStackTrace();
 		}
 
-		return new VideoSource(videoTitle, videoUrl, videoName);
+		return new VideoSource(videoTitle, videoUrl);
 	}
 
 }
