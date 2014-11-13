@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.support.Utility;
+import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.support.VideoSource;
 import cn.fython.carryingcat.support.VideoUrl;
 
@@ -45,7 +46,7 @@ public class FlvxzTools {
 		return Utility.sendHttpMessage(FYCAFE_CONVERT_API_URL + source, "GET", null);
 	}
 
-	public static VideoSource getVideoSource(String url) {
+	public static VideoItem getVideoItem(String url) throws JSONException{
 		String encodedUrl = convertToFlvxzUrl(url);
 		Log.i(TAG, "Encoded by FyCafe.Me:" + encodedUrl);
 
@@ -55,27 +56,78 @@ public class FlvxzTools {
 		try {
 			jsonArray = new JSONArray(json);
 		} catch (JSONException e) {
-			e.printStackTrace();
 			Log.e(TAG, "The result from Flvxz is broken.");
-			return null;
+			throw e;
 		}
 
 		String videoTitle = null;
-		ArrayList<VideoUrl> videoUrl;
-		int videoUrlCount = jsonArray.getCount();
-		videoUrl = new ArrayList<VideoUrl>();
+		ArrayList<VideoSource> videoSrc = new ArrayList<VideoSource>();
+		int videoCount = jsonArray.length();
 
-		// TODO Unfinished!!!
+		// TODO Untested!!
 
-		JSONObject obj;
-		try {
-			obj = jsonArray.getJSONObject(0);
-			videoTitle = obj.getString("title");
-		} catch (JSONException e) {
-			e.printStackTrace();
+		for (int i = 0; i < videoCount; i++) {
+
+			JSONObject obj = null;
+			obj = jsonArray.getJSONObject(i);
+
+			if (obj != null) {
+				try {
+					/** 读取文件URL列表 **/
+					ArrayList<VideoUrl> urls = new ArrayList<VideoUrl>();
+					JSONArray urlarray = obj.getJSONArray("files");
+
+					for (int j = 0; j < urlarray.length(); j++) {
+						JSONObject obj1 = urlarray.getJSONObject(j);
+						urls.add(
+								new VideoUrl(
+										obj1.getString("furl"),
+										obj1.getString("ftype"),
+										obj1.getString("time"),
+										obj1.getString("size"),
+										obj1.getInt("bytes"),
+										obj1.getInt("seconds")
+								)
+						);
+					}
+
+					/** 装填VideoSource **/
+					VideoSource vs = new VideoSource(null, urls);
+					try {
+						vs.title = obj.getString("title");
+					} catch (Exception e) {
+						Log.i(TAG, "当前VideoSource无法读取title");
+					}
+					try {
+						vs.site = obj.getString("site");
+					} catch (Exception e) {
+						Log.i(TAG, "当前VideoSource无法读取site");
+					}
+					try {
+						vs.playurl = obj.getString("playurl");
+					} catch (Exception e) {
+						Log.i(TAG, "当前VideoSource无法读取playurl");
+					}
+					try {
+						vs.imgurl = obj.getString("img");
+					} catch (Exception e) {
+						Log.i(TAG, "当前VideoSource无法读取imgurl");
+					}
+					try {
+						vs.quality = obj.getString("quality");
+					} catch (Exception e) {
+						Log.i(TAG, "当前VideoSource无法读取quality");
+					}
+					videoSrc.add(vs);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Log.e(TAG, "当前VideoSource读取失败!");
+				}
+			}
+
 		}
 
-		return new VideoSource(videoTitle, videoUrl);
+		return new VideoItem(videoSrc);
 	}
 
 }

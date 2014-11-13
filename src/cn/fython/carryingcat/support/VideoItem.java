@@ -2,25 +2,45 @@ package cn.fython.carryingcat.support;
 
 import java.util.ArrayList;
 
-public class VideoItem extends VideoSource {
+public class VideoItem {
 
-	public String path;
-	public ArrayList<String> fileName;
+	public String name, path, playurl, imgurl;
+	public int selectedSource = 0;
+	public ArrayList<VideoSource> srcs;
 
-	public VideoItem(String name) {
-		super(name);
+	public VideoItem() {
+		this.srcs = new ArrayList<VideoSource>();
+	}
+
+	public VideoItem(ArrayList<VideoSource> srcs) {
+		this.srcs = srcs;
+		if (this.srcs.size() > 0) {
+			this.name = this.srcs.get(0).title;
+			this.playurl = this.srcs.get(0).playurl;
+			this.imgurl = this.srcs.get(0).imgurl;
+		}
+	}
+
+	public VideoItem(ArrayList<VideoSource> srcs, int selectedSource) {
+		this.srcs = srcs;
+		this.selectedSource = selectedSource;
+		if (this.srcs.size() > 0) {
+			this.name = this.srcs.get(0).title;
+			this.playurl = this.srcs.get(0).playurl;
+			this.imgurl = this.srcs.get(0).imgurl;
+		}
 	}
 	
-	public VideoItem(String name, String path) {
-		super(name);
+	public VideoItem(String name, String path,
+	                 ArrayList<VideoSource> srcs) {
+		this.srcs = srcs;
+		if (this.srcs.size() > 0) {
+			this.name = this.srcs.get(0).title;
+			this.playurl = this.srcs.get(0).playurl;
+			this.imgurl = this.srcs.get(0).imgurl;
+		}
+		this.name = name;
 		this.path = path;
-		this.fileName = new ArrayList<String>();
-	}
-	
-	public VideoItem(String name, String path, ArrayList<String> fileName) {
-		super(name);
-		this.path = path;
-		this.fileName = fileName;
 	}
 
 }

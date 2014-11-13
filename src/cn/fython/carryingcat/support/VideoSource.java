@@ -6,17 +6,25 @@ import cn.fython.carryingcat.support.VideoUrl;
 
 public class VideoSource {
 
-	public String name, websrc;
-	public ArrayList<VideoUrl> urls;
+	public String title, playurl, quality, site, imgurl;
+	private ArrayList<VideoUrl> urls;
 
-	public VideoSource(String name) {
-		this.name = name;
+	public VideoSource(String title) {
+		this.title = title;
 		this.urls = new ArrayList<VideoUrl>();
 	}
 	
-	public VideoSource(String name, ArrayList<VideoUrl> urls) {
-		this.name = name;
+	public VideoSource(String title, ArrayList<VideoUrl> urls) {
+		this.title = title;
 		this.urls = urls;
+	}
+
+	public void addVideoUrl(VideoUrl newUrl) {
+		urls.add(newUrl);
+	}
+
+	public VideoUrl getVideoUrl(int position) {
+		return urls.get(position);
 	}
 
 }

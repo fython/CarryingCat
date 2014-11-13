@@ -12,9 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
 import java.util.Locale;
 
 import cn.fython.carryingcat.R;
+import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.VideoSource;
 import cn.fython.carryingcat.support.api.FlvxzTools;
 import cn.fython.carryingcat.ui.task.AddActivity;
 
@@ -22,6 +26,8 @@ public class StepOneFragment extends Fragment {
 
 	private EditText et_url;
 	private TextView tv_name;
+
+	private VideoItem data;
 
 	public StepOneFragment() {}
 
@@ -67,16 +73,26 @@ public class StepOneFragment extends Fragment {
 		return rootView;
 	}
 
-	private class GetResultTask extends AsyncTask<Void, Void, String> {
+	private class GetResultTask extends AsyncTask<Void, Void, VideoItem> {
 
 		@Override
-		protected String doInBackground(Void... params) {
-			return FlvxzTools.getVideoSource(et_url.getText().toString()).name;
+		protected VideoItem doInBackground(Void... params) {
+			try {
+				return FlvxzTools.getVideoItem(et_url.getText().toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String result) {
-			tv_name.setText(result);
+		protected void onPostExecute(VideoItem result) {
+			data = result;
+			if (data != null) {
+				tv_name.setText(data.name);
+			} else {
+				tv_name.setText(getString(R.string.result_error));
+			}
 		}
 
 	}
