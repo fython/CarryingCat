@@ -79,14 +79,33 @@ public class FlvxzTools {
 
 					for (int j = 0; j < urlarray.length(); j++) {
 						JSONObject obj1 = urlarray.getJSONObject(j);
+						String furl, ftype, time, size;
+						int bytes = 0, seconds = 0;
+						furl = obj1.getString("furl");
+						ftype = obj1.getString("ftype");
+						try {
+							size = obj1.getString("size");
+						} catch (JSONException e) {
+							size = "Unknown";
+						}
+						time = obj1.getString("time");
+						try {
+							bytes = obj1.getInt("bytes");
+						} catch (JSONException e) {
+						} finally {
+							if (size == "Unknown") {
+								size = String.valueOf(bytes) + "B";
+							}
+						}
+						seconds = obj1.getInt("seconds");
 						urls.add(
 								new VideoUrl(
-										obj1.getString("furl"),
-										obj1.getString("ftype"),
-										obj1.getString("time"),
-										obj1.getString("size"),
-										obj1.getInt("bytes"),
-										obj1.getInt("seconds")
+										furl,
+										ftype,
+										time,
+										size,
+										bytes,
+										seconds
 								)
 						);
 					}
@@ -127,7 +146,9 @@ public class FlvxzTools {
 
 		}
 
-		return new VideoItem(videoSrc);
+		VideoItem videoItem = new VideoItem(videoSrc);
+		Log.i(TAG, "读取VideoItem完毕, 数据输出:" + videoItem.toString());
+		return videoItem;
 	}
 
 }

@@ -20,12 +20,25 @@
 	<string name="title_url">URL</string>
 	<string name="title_bilibili_no">BILIBILI AV NO.</string>
 	<string name="title_url_title">VIDEO TITLE</string>
+	<string name="title_quality">QUALITY</string>
+	<string name="title_size">VIDEO SIZE</string>
+	<string name="content_size">%1$s (%2$s)</string>
+
+	<string name="result_hint_wrong_url">You haven\'t entered the correct video url.</string>
+	<string name="result_unavailable">UNAVAILABLE</string>
 	<string name="result_available">AVAILABLE</string>
 	<string name="result_error">ERROR</string>
+
+	<string name="hint_enter_url_error">It seems that the URL you entered is wrong. Check it, plz.</string>
+
+	<string name="hint_finish">Your download task is ready!</string>
+	<string name="hint_unsupported_section_download">(We haven\'t supported download section, please not choose section download.)</string>
 
 	<string-array name="spinner_address_type">
 		<item>@string/title_url</item>
 		<item>@string/title_bilibili_no</item>
 	</string-array>
+
+	<string name="quality_choose">Choose quality</string>
 
 </resources>

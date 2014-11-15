@@ -2,6 +2,8 @@ package cn.fython.carryingcat.ui.task;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.AddStepPagerAdapter;
+import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.fragment.StepOneFragment;
 import cn.fython.carryingcat.ui.fragment.StepTwoFragment;
 
@@ -18,8 +21,13 @@ public class AddActivity extends ActionBarActivity {
 
 	private ViewPager mPager;
 
-	private Fragment fragment0, fragment1;
+	private static StepOneFragment fragment0;
+	private static StepTwoFragment fragment1;
 	private AddStepPagerAdapter mAdapter;
+
+	private static VideoItem data;
+
+	public static int quality = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,5 +64,25 @@ public class AddActivity extends ActionBarActivity {
 	public void nextStep() {
 		mPager.setCurrentItem(1, true);
 	}
+
+	public VideoItem getVideoItem() {
+		return data;
+	}
+
+	public static Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message m) {
+			switch (m.what) {
+				case 0:
+					data = fragment0.getVideoItem();
+					break;
+				case 1:
+
+					break;
+			}
+		}
+
+	};
 
 }

@@ -62,7 +62,7 @@
 						android:layout_height="wrap_content"
 						android:id="@+id/et_url"
 						android:singleLine="true"
-						android:textColor="@color/primary_material_light"
+						android:textColor="@color/grey_900"
 						android:textCursorDrawable="@null"
 						android:layout_marginLeft="8dp"
 						android:layout_marginRight="8dp"/>
@@ -98,8 +98,84 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:id="@+id/tv_title"
-						android:text="[TEST] Hello, world! Hello, world! Hello, world! Hello, world! Hello, world!"
-						android:textColor="@color/primary_material_light"
+						android:text="@string/result_unavailable"
+						android:textColor="@color/grey_900"
+						android:layout_marginLeft="12dp"
+						android:layout_marginRight="12dp"/>
+
+				</LinearLayout>
+
+				<!-- Quality choose -->
+				<LinearLayout
+					android:orientation="vertical"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginTop="6dp">
+
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_margin="5dp">
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:id="@+id/title_quality"
+							android:text="@string/title_quality"
+							android:textColor="@color/pink_500"
+							android:layout_marginLeft="6dp"
+							android:layout_marginRight="6dp"
+							android:textStyle="bold"/>
+
+					</LinearLayout>
+
+					<oppa.paperstyle.PaperButton
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:id="@+id/btn_quality"
+						android:layout_marginLeft="5dp"
+						android:layout_marginRight="5dp"
+						android:layout_marginBottom="5dp"
+						app:pw_backgroundColor="@android:color/transparent"
+						app:pw_borderSize="0"
+						app:pw_focusColor="@color/grey_400"
+					    android:text="@string/result_unavailable"
+						android:textColor="@color/grey_900"/>
+
+				</LinearLayout>
+
+				<!-- Video size & length -->
+				<LinearLayout
+					android:orientation="vertical"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginTop="6dp">
+
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_margin="5dp">
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:id="@+id/title_size"
+							android:text="@string/title_size"
+							android:textColor="@color/pink_500"
+							android:layout_marginLeft="6dp"
+							android:layout_marginRight="6dp"
+							android:textStyle="bold"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:id="@+id/tv_size"
+						android:text="@string/result_unavailable"
+						android:textColor="@color/grey_900"
 						android:layout_marginLeft="12dp"
 						android:layout_marginRight="12dp"/>
 
@@ -119,6 +195,7 @@
 		android:gravity="right"
 		android:layout_marginLeft="3dp"
 	    android:layout_marginRight="3dp"
+	    android:layout_marginBottom="3dp"
 		>
 
 		<LinearLayout
@@ -128,12 +205,16 @@
 			android:layout_weight="3">
 		</LinearLayout>
 
-		<Button
+		<oppa.paperstyle.PaperButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/button_next"
+			android:layout_weight="1"
 			android:id="@+id/button"
-			android:layout_weight="1"/>
+			app:pw_backgroundColor="@color/deep_purple_500"
+			app:pw_borderSize="0"
+			app:pw_focusColor="@color/deep_purple_300"
+			android:text="@string/button_next"
+			android:layout_marginRight="3dp"/>
 
 	</LinearLayout>
 

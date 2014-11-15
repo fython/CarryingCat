@@ -20,12 +20,25 @@
 	<string name="title_url">网页地址</string>
 	<string name="title_bilibili_no">B站AV号</string>
 	<string name="title_url_title">视频标题</string>
+	<string name="title_quality">视频质量</string>
+	<string name="title_size">视频大小</string>
+	<string name="content_size">大小：%1$s (时长：%2$s)</string>
+
+	<string name="result_hint_wrong_url">你还没输入正确的视频网址</string>
+	<string name="result_unavailable">不可用</string>
 	<string name="result_available">下载可用</string>
 	<string name="result_error">错误</string>
+
+	<string name="hint_enter_url_error">似乎你输入的网址是错误的，请在检查一次。</string>
+
+	<string name="hint_finish">你的下载已就绪！</string>
+	<string name="hint_unsupported_section_download">(我们暂时不支持分段下载，请勿选用分段下载。)</string>
 
 	<string-array name="spinner_address_type">
 		<item>@string/title_url</item>
 		<item>@string/title_bilibili_no</item>
 	</string-array>
+
+	<string name="quality_choose">选择质量</string>
 
 </resources>
