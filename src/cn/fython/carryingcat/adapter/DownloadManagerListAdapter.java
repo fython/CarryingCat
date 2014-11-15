@@ -62,8 +62,15 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		holder.title.setText(tasks.get((int) getItemId(position)).name);
-		holder.pb.setProgress(tasks.get((int) getItemId(position)).progress.get(0));
+		int index = (int) getItemId(position);
+
+		holder.title.setText(tasks.get(index).srcs.get(tasks.get(index).selectedSource).title);
+		try {
+			// holder.pb.setProgress(tasks.get(index).progress.get(0));
+			holder.pb.setProgress(50);
+		} catch (Exception e) {
+
+		}
 
 		return convertView;
 	}

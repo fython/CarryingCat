@@ -36,6 +36,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 		mListView = (ListView) rootView.findViewById(R.id.listView);
 
 		mAdapter = new DownloadManagerListAdapter(getActivity().getApplicationContext(), new ArrayList<VideoItemTask>());
+		mListView.setAdapter(mAdapter);
 
 		rootView.findViewById(R.id.fl_start_all).setOnClickListener(this);
 		rootView.findViewById(R.id.fl_pause_all).setOnClickListener(this);

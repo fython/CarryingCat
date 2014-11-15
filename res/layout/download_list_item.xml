@@ -14,15 +14,18 @@
 		android:id="@+id/tv_title"
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="5dp"
+		android:layout_marginBottom="6dp"
 		android:paddingTop="8dp"/>
 
 	<ProgressBar
+		style="?android:attr/progressBarStyleHorizontal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/progressBar"
+		android:max="100"
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="5dp"
 		android:paddingBottom="8dp"
-		android:max="100"/>
+		android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
