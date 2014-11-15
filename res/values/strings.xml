@@ -14,6 +14,10 @@
 	<string name="button_unable">UNABLE TO CLICK</string>
 	<string name="button_finish">FINISH</string>
 
+	<string name="button_start_all">Start all</string>
+	<string name="button_pause_all">Pause all</string>
+	<string name="button_delete_all">Clean all</string>
+
 	<string name="activity_title_add_task">Add Task</string>
 
 	<string name="title_address">ADDRESS</string>

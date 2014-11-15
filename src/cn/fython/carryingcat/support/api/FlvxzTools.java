@@ -57,19 +57,26 @@ public class FlvxzTools {
 			jsonArray = new JSONArray(json);
 		} catch (JSONException e) {
 			Log.e(TAG, "The result from Flvxz is broken.");
-			throw e;
+			e.printStackTrace();
+			return null;
 		}
 
-		String videoTitle = null;
-		ArrayList<VideoSource> videoSrc = new ArrayList<VideoSource>();
-		int videoCount = jsonArray.length();
+		ArrayList<VideoSource> videoSrc = getVideoSource(jsonArray);
 
-		// TODO Untested!!
+		VideoItem videoItem = new VideoItem(videoSrc);
+		Log.i(TAG, "读取VideoItem完毕, 数据输出:" + videoItem.toString());
+		return videoItem;
+	}
+
+	public static ArrayList<VideoSource> getVideoSource(JSONArray array) throws JSONException {
+		ArrayList<VideoSource> videoSrc = new ArrayList<VideoSource>();
+
+		int videoCount = array.length();
 
 		for (int i = 0; i < videoCount; i++) {
 
 			JSONObject obj = null;
-			obj = jsonArray.getJSONObject(i);
+			obj = array.getJSONObject(i);
 
 			if (obj != null) {
 				try {
@@ -146,9 +153,7 @@ public class FlvxzTools {
 
 		}
 
-		VideoItem videoItem = new VideoItem(videoSrc);
-		Log.i(TAG, "读取VideoItem完毕, 数据输出:" + videoItem.toString());
-		return videoItem;
+		return videoSrc;
 	}
 
 }

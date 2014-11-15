@@ -1,5 +1,11 @@
 package cn.fython.carryingcat.support;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.support.VideoUrl;
@@ -25,6 +31,25 @@ public class VideoSource {
 
 	public VideoUrl getVideoUrl(int position) {
 		return urls.get(position);
+	}
+
+	public JSONObject toJSONObject() {
+		JSONObject object = new JSONObject();
+		try {
+			object.put("title", title);
+			object.put("playurl", playurl);
+			object.put("quality", quality);
+			object.put("site", site);
+			object.put("imgurl", imgurl);
+			JSONArray jsonArray = new JSONArray();
+			for (VideoUrl url:urls) {
+				jsonArray.put(url.toJSONObject());
+			}
+			object.put("files", jsonArray);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return object;
 	}
 
 }

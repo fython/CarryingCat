@@ -1,6 +1,7 @@
 package cn.fython.carryingcat.ui.task;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.AddStepPagerAdapter;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.StepOneFragment;
 import cn.fython.carryingcat.ui.fragment.StepTwoFragment;
 
@@ -69,20 +71,15 @@ public class AddActivity extends ActionBarActivity {
 		return data;
 	}
 
-	public static Handler mHandler = new Handler() {
+	public void setVideoItem(VideoItem data) {
+		this.data = data;
+	}
 
-		@Override
-		public void handleMessage(Message m) {
-			switch (m.what) {
-				case 0:
-					data = fragment0.getVideoItem();
-					break;
-				case 1:
-
-					break;
-			}
-		}
-
-	};
+	public void finishAdding() {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("data", data.toJSONObject().toString());
+		setResult(MainActivity.RESULT_OK, intent);
+		finish();
+	}
 
 }

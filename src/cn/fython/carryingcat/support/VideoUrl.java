@@ -1,5 +1,8 @@
 package cn.fython.carryingcat.support;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class VideoUrl {
 
 	/**
@@ -34,6 +37,21 @@ public class VideoUrl {
 		this.size = size;
 		this.bytes = bytes;
 		this.seconds = seconds;
+	}
+
+	public JSONObject toJSONObject() {
+		JSONObject object = new JSONObject();
+		try {
+			object.put("furl", url);
+			object.put("ftype", type);
+			object.put("bytes", bytes);
+			object.put("seconds", seconds);
+			object.put("time", time);
+			object.put("size", size);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return object;
 	}
 
 }

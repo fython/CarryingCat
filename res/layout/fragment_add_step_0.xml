@@ -212,7 +212,7 @@
 			android:id="@+id/button"
 			app:pw_backgroundColor="@color/deep_purple_500"
 			app:pw_borderSize="0"
-			app:pw_focusColor="@color/deep_purple_300"
+			app:pw_focusColor="@color/deep_purple_200"
 			android:text="@string/button_next"
 			android:layout_marginRight="3dp"/>
 

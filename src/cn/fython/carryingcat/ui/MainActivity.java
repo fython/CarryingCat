@@ -13,13 +13,21 @@ import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.HomePagerAdapter;
 import cn.fython.carryingcat.support.Utility;
+import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.VideoItemTask;
+import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.ui.task.AddActivity;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class MainActivity extends ActionBarActivity {
+
+	public static final int REQUEST_ADD_TASK = 10001;
 
 	private ActionBar mActionBar;
 
@@ -64,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, AddActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-				startActivity(intent);
+				startActivityForResult(intent, REQUEST_ADD_TASK);
 			}
 
 		});
@@ -83,6 +91,30 @@ public class MainActivity extends ActionBarActivity {
 			return (PagerSlidingTabStrip) this.findViewById(R.id.pager_tab);
 		} else {
 			return (PagerSlidingTabStrip) mActionBar.getCustomView().findViewById(R.id.pager_tab);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+		switch (requestCode) {
+			case REQUEST_ADD_TASK:
+				String jsonStr = data.getStringExtra("data");
+				VideoItem vi;
+				try {
+					vi = new VideoItem(new JSONObject(jsonStr));
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return;
+				}
+				VideoItemTask vit = new VideoItemTask(vi);
+				((DownloadManagerFragment) mPagerAdapter.getItem(1)).receiveNewTask(vit);
+				if (mPager.getCurrentItem() != 1) {
+					mPager.setCurrentItem(1, true);
+				}
+				break;
 		}
 	}
 

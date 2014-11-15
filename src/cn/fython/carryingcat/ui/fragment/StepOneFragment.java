@@ -219,7 +219,7 @@ public class StepOneFragment extends Fragment {
 				setTextViewVideoSize();
 
 				// 通知AddActivity拉取VideoItem数据
-				mActivity.mHandler.sendEmptyMessage(0);
+				mActivity.setVideoItem(data);
 			} else {
 				tv_name.setText(getString(R.string.result_error));
 			}

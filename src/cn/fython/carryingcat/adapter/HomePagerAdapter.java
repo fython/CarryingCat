@@ -4,11 +4,14 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.ui.fragment.LocalVideoFragment;
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
 
 	private String[] TITLES;
+	private LocalVideoFragment fragment0;
+	private DownloadManagerFragment fragment1;
 
 	public HomePagerAdapter(FragmentManager fm, String[] titles) {
 		super(fm);
@@ -29,9 +32,15 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				return LocalVideoFragment.newInstance();
+				if (fragment0 == null) {
+					fragment0 = LocalVideoFragment.newInstance();
+				}
+				return fragment0;
 			case 1:
-				return LocalVideoFragment.newInstance();
+				if (fragment1 == null) {
+					fragment1 = DownloadManagerFragment.newInstance();
+				}
+				return fragment1;
 			default:
 				return null;
 		}

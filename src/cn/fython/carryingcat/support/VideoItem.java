@@ -1,6 +1,12 @@
 package cn.fython.carryingcat.support;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import cn.fython.carryingcat.support.api.FlvxzTools;
 
 public class VideoItem {
 
@@ -41,6 +47,26 @@ public class VideoItem {
 		}
 		this.name = name;
 		this.path = path;
+	}
+
+	public VideoItem(JSONObject jsonObject) throws JSONException {
+		this.srcs = FlvxzTools.getVideoSource(jsonObject.getJSONArray("sources"));
+		this.selectedSource = jsonObject.getInt("selectedSource");
+	}
+
+	public JSONObject toJSONObject() {
+		JSONObject object = new JSONObject();
+		try {
+			JSONArray array = new JSONArray();
+			for (VideoSource src:srcs) {
+				array.put(src.toJSONObject());
+			}
+			object.put("sources", array);
+			object.put("selectedSource", selectedSource);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return object;
 	}
 
 }

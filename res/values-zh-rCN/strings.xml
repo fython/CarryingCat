@@ -14,6 +14,10 @@
 	<string name="button_unable">无法添加</string>
 	<string name="button_finish">完成</string>
 
+	<string name="button_start_all">全部开始</string>
+	<string name="button_pause_all">全部暂停</string>
+	<string name="button_delete_all">清空队列</string>
+
 	<string name="activity_title_add_task">添加任务</string>
 
 	<string name="title_address">源地址</string>

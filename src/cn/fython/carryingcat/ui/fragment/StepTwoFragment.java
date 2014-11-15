@@ -39,7 +39,7 @@ public class StepTwoFragment extends Fragment {
 					).show();
 					return;
 				}
-				mActivity.mHandler.sendEmptyMessage(1);
+				mActivity.finishAdding();
 			}
 		});
 
