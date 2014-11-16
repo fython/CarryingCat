@@ -16,12 +16,16 @@ import com.astuetz.PagerSlidingTabStrip;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.HomePagerAdapter;
+import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.support.VideoItemTask;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
+import cn.fython.carryingcat.ui.fragment.LocalVideoFragment;
 import cn.fython.carryingcat.ui.task.AddActivity;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
@@ -37,10 +41,15 @@ public class MainActivity extends ActionBarActivity {
 
 	private HomePagerAdapter mPagerAdapter;
 
+	FileManager fm;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		FileManager fm = new FileManager(getApplicationContext());
+		fm.initCarryingCatDirectory();
 
 		setUpActionBar();
 
@@ -110,12 +119,34 @@ public class MainActivity extends ActionBarActivity {
 					return;
 				}
 				VideoItemTask vit = new VideoItemTask(vi);
-				((DownloadManagerFragment) mPagerAdapter.getItem(1)).receiveNewTask(vit);
+				vit.path = FileManager.getDownloadDirPath() + "/" + vit.srcs.get(0).title;
 				if (mPager.getCurrentItem() != 1) {
 					mPager.setCurrentItem(1, true);
 				}
+
+				if (fm == null) {
+					fm = new FileManager(getApplicationContext());
+				}
+				try {
+					fm.makeDir(vit.path);
+					fm.saveFile(
+							vit.path + "/data.json",
+							vit.toJSONObject().toString()
+					);
+					getDownloadManagerFragment().receiveNewTask(vit);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				break;
 		}
+	}
+
+	public LocalVideoFragment getLocalVideoFragment() {
+		return (LocalVideoFragment) mPagerAdapter.getItem(0);
+	}
+
+	public DownloadManagerFragment getDownloadManagerFragment() {
+		return (DownloadManagerFragment) mPagerAdapter.getItem(1);
 	}
 
 	@Override

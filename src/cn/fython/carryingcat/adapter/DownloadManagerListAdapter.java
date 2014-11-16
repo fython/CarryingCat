@@ -56,6 +56,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.title = (TextView) convertView.findViewById(R.id.tv_title);
+			holder.size = (TextView) convertView.findViewById(R.id.tv_size);
 			holder.pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
 			convertView.setTag(holder);
 		} else {
@@ -65,6 +66,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 		int index = (int) getItemId(position);
 
 		holder.title.setText(tasks.get(index).srcs.get(tasks.get(index).selectedSource).title);
+
 		try {
 			// holder.pb.setProgress(tasks.get(index).progress.get(0));
 			holder.pb.setProgress(50);
@@ -77,7 +79,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 
-		public TextView title;
+		public TextView title, size;
 		public ProgressBar pb;
 
 	}

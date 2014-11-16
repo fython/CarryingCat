@@ -197,7 +197,7 @@ public class StepOneFragment extends Fragment {
 		protected VideoItem doInBackground(Void... params) {
 			try {
 				return FlvxzTools.getVideoItem(et_url.getText().toString());
-			} catch (JSONException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
@@ -222,6 +222,9 @@ public class StepOneFragment extends Fragment {
 				mActivity.setVideoItem(data);
 			} else {
 				tv_name.setText(getString(R.string.result_error));
+				qualityName = new String[]{};
+				btn_quality.setText(getString(R.string.result_unavailable));
+				tv_size.setText(getString(R.string.result_unavailable));
 			}
 		}
 

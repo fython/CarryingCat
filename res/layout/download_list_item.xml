@@ -6,16 +6,29 @@
               android:layout_height="match_parent"
               android:weightSum="1">
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:text="Medium Text"
-		android:id="@+id/tv_title"
-		android:layout_marginLeft="5dp"
-		android:layout_marginRight="5dp"
-		android:layout_marginBottom="6dp"
-		android:paddingTop="8dp"/>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="视频标题"
+			android:id="@+id/tv_title"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="2.35/100MB"
+			android:id="@+id/tv_size"
+			android:layout_marginRight="5dp"/>
+	</LinearLayout>
 
 	<ProgressBar
 		style="?android:attr/progressBarStyleHorizontal"
