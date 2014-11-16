@@ -151,16 +151,18 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 			for (int i = 0; i < mAdapter.getCount(); i++) dmPro.pauseDownload(getTask(i).downloadId);
 			return;
 		} else if (id == R.id.fl_delete_all) {
-			for (;mAdapter.getCount() != 0;) deleteTask(0);
+			for (;mAdapter.getCount() != 0;) deleteTask(0, true);
 			return;
 		} else {
 			// Nothing to do
 		}
 	}
 
-	public void deleteTask(int index) {
+	public void deleteTask(int index, boolean deleteFile) {
 		dm.remove(getTask(index).downloadId);
-		FileManager.deleteDir(getTask(index).path);
+		if (deleteFile) {
+			FileManager.deleteDir(getTask(index).path);
+		}
 		mAdapter.removeItem(index);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -172,7 +174,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 					.setPositiveButton(android.R.string.ok, new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							deleteTask(index);
+							deleteTask(index, true);
 							dialogDelete.dismiss();
 						}
 					})
@@ -257,7 +259,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			deleteTask(index);
+			deleteTask(index, false);
 		}
 		mAdapter.notifyDataSetChanged();
 	}
