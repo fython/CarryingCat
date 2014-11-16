@@ -61,6 +61,7 @@ public class VideoItem {
 			for (VideoSource src:srcs) {
 				array.put(src.toJSONObject());
 			}
+			object.put("path", path);
 			object.put("sources", array);
 			object.put("selectedSource", selectedSource);
 		} catch (JSONException e) {

@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class FileManager {
@@ -23,7 +24,7 @@ public class FileManager {
 	}
 
 	public static String getDownloadDirPath() {
-		return getStorageDirPath() + "/download";
+		return Environment.getExternalStorageDirectory().toString() + "/Android/data/cn.fython.carryingcat/files/download";
 	}
 
 	public static String getMyVideoDirPath() {
@@ -45,13 +46,13 @@ public class FileManager {
 		File ccDownload = new File(getDownloadDirPath());
 		File ccMyVideo = new File(getMyVideoDirPath());
 		if (!ccRoot.exists()) {
-			ccRoot.mkdir();
+			ccRoot.mkdirs();
 		}
 		if (!ccDownload.exists()) {
-			ccDownload.mkdir();
+			ccDownload.mkdirs();
 		}
 		if (!ccMyVideo.exists()) {
-			ccMyVideo.mkdir();
+			ccMyVideo.mkdirs();
 		}
 	}
 
@@ -63,7 +64,28 @@ public class FileManager {
 		}
 	}
 
-	public void saveFile(String name, String text) throws IOException {
+	public static void deleteDir(String path) {
+		File file = new File(path);
+		if (file.isFile()) {
+			file.delete();
+			return;
+		}
+
+		if(file.isDirectory()){
+			File[] childFiles = file.listFiles();
+			if (childFiles == null || childFiles.length == 0) {
+				file.delete();
+				return;
+			}
+
+			for (int i = 0; i < childFiles.length; i++) {
+				deleteDir(childFiles[i].getAbsolutePath());
+			}
+			file.delete();
+		}
+	}
+
+	public static void saveFile(String name, String text) throws IOException {
 		File file = new File(name);
 		FileOutputStream fos = new FileOutputStream(file);
 		fos.write(text.getBytes());
@@ -88,6 +110,38 @@ public class FileManager {
 		File file = new File(path);
 		if (!file.exists() | file.isFile()) {
 			file.mkdir();
+		}
+	}
+
+	public static void copyDirectory(File sourceLocation , File targetLocation) throws IOException {
+		if (sourceLocation.isDirectory()) {
+			if ((!targetLocation.exists() && !targetLocation.mkdirs()) && !targetLocation.isDirectory()) {
+				throw new IOException("Cannot create dir " + targetLocation.getAbsolutePath());
+			}
+
+			String[] children = sourceLocation.list();
+			for (int i=0; i<children.length; i++) {
+				copyDirectory(new File(sourceLocation, children[i]),
+						new File(targetLocation, children[i]));
+			}
+		} else {
+			// make sure the directory we plan to store the recording in exists
+			File directory = targetLocation.getParentFile();
+			if (directory != null && !directory.exists() && !directory.mkdirs()) {
+				throw new IOException("Cannot create dir " + directory.getAbsolutePath());
+			}
+
+			InputStream in = new FileInputStream(sourceLocation);
+			OutputStream out = new FileOutputStream(targetLocation);
+
+			// Copy the bits from instream to outstream
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
 		}
 	}
 

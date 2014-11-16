@@ -1,5 +1,6 @@
 package cn.fython.carryingcat.adapter;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.support.VideoItemTask;
+import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 
 public class DownloadManagerListAdapter extends BaseAdapter {
 
@@ -51,27 +53,39 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 
+		int index = (int) getItemId(position);
+		VideoItemTask targetTask = tasks.get(index);
+
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.download_list_item, null);
 
 			holder = new ViewHolder();
 			holder.title = (TextView) convertView.findViewById(R.id.tv_title);
 			holder.size = (TextView) convertView.findViewById(R.id.tv_size);
+			holder.mode = (TextView) convertView.findViewById(R.id.tv_mode);
 			holder.pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		int index = (int) getItemId(position);
-
-		holder.title.setText(tasks.get(index).srcs.get(tasks.get(index).selectedSource).title);
-
+		holder.title.setText(targetTask.srcs.get(tasks.get(index).selectedSource).title);
+		holder.size.setText(DownloadManagerFragment.getSize(targetTask.bytes[0]) + "/" + DownloadManagerFragment.getSize(targetTask.bytes[1]));
 		try {
-			// holder.pb.setProgress(tasks.get(index).progress.get(0));
-			holder.pb.setProgress(50);
+			holder.pb.setIndeterminate(false);
+			holder.pb.setProgress(targetTask.progress.get(0));
 		} catch (Exception e) {
 
+		}
+		if (targetTask.mode == DownloadManager.STATUS_PENDING) {
+			holder.pb.setIndeterminate(true);
+			holder.mode.setText(R.string.status_pending);
+		} else if (targetTask.mode == DownloadManager.STATUS_RUNNING) {
+			holder.mode.setText(R.string.status_downloading);
+		} else if (targetTask.mode == DownloadManager.STATUS_FAILED) {
+			holder.mode.setText(R.string.status_failed);
+		} else if (targetTask.mode == DownloadManager.STATUS_SUCCESSFUL) {
+			holder.mode.setText(R.string.status_succeed);
 		}
 
 		return convertView;
@@ -79,7 +93,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 
-		public TextView title, size;
+		public TextView title, size, mode;
 		public ProgressBar pb;
 
 	}

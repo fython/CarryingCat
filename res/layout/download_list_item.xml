@@ -21,13 +21,29 @@
 			android:layout_marginRight="5dp"
 			android:layout_weight="1"/>
 
-		<TextView
+		<LinearLayout
+			android:orientation="vertical"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:text="2.35/100MB"
-			android:id="@+id/tv_size"
-			android:layout_marginRight="5dp"/>
+			android:layout_height="match_parent"
+			android:gravity="center_vertical|right">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:text="2.35/100MB"
+				android:id="@+id/tv_size"
+				android:layout_marginRight="5dp"
+				android:layout_marginTop="5dp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:id="@+id/tv_mode"
+				android:layout_marginRight="5dp"/>
+		</LinearLayout>
+
 	</LinearLayout>
 
 	<ProgressBar
