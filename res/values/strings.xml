@@ -55,4 +55,8 @@
 	<string name="status_succeed">Succeed</string>
 	<string name="status_pending">Waiting</string>
 
+	<string name="settings">Settings</string>
+	<string name="settings_gui">UI</string>
+	<string name="settings_download">Download</string>
+
 </resources>
