@@ -45,4 +45,18 @@
 
 	<string name="quality_choose">选择质量</string>
 
+	<string name="download_noti_title">正在下载 %s....</string>
+	<string name="download_noti_desc">已选视频源: %1$s (%2$s)</string>
+	<string name="download_ask_for_deleting">确认删除 %s?</string>
+	<string name="download_ask_for_deleting_warning">警告：此操作不可恢复。</string>
+	<string name="status_downloading">下载中</string>
+	<string name="status_pause">已暂停</string>
+	<string name="status_failed">下载失败</string>
+	<string name="status_succeed">下载完成</string>
+	<string name="status_pending">请稍等</string>
+
+	<string name="settings">设置</string>
+	<string name="settings_gui">界面设置</string>
+	<string name="settings_download">下载设置</string>
+
 </resources>
