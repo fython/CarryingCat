@@ -213,7 +213,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 		DownloadManager.Request request;
 		request = new DownloadManager.Request(Uri.parse(task.srcs.get(task.selectedSource).getVideoUrl(0).url));
 		request.setDestinationInExternalPublicDir(
-				FileManager.getDownloadDirPath() + "/" + task.srcs.get(task.selectedSource).title,
+				FileManager.getDownloadDirPath(false) + "/" + task.srcs.get(task.selectedSource).title,
 				task.srcs.get(task.selectedSource).quality + "." + task.srcs.get(task.selectedSource).getVideoUrl(0).type
 		);
 		request.setTitle(String.format(getString(R.string.download_noti_title), task.srcs.get(task.selectedSource).title));
