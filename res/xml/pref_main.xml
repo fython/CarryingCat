@@ -2,7 +2,25 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<Preference android:key="gui" android:title="@string/settings_gui"/>
-	<Preference android:key="download" android:title="@string/settings_download"/>
+	<PreferenceCategory
+		android:key="application_settings"
+		android:title="@string/title_application">
+
+		<Preference android:key="gui" android:title="@string/settings_gui"/>
+		<Preference android:key="download" android:title="@string/settings_download"/>
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:key="about"
+	    android:title="@string/title_about">
+
+		<Preference android:key="application_info" android:title="@string/app_name"/>
+		<Preference android:key="gplus" android:title="@string/about_gplus" android:summary="@string/about_gplus_name"/>
+		<Preference android:key="weibo" android:title="@string/about_sina_weibo" android:summary="@string/about_weibo_user_name"/>
+		<Preference android:key="email" android:title="@string/about_email" android:summary="@string/about_email_address"/>
+		<Preference android:key="blog" android:title="@string/about_blog" android:summary="@string/about_blog_address"/>
+
+	</PreferenceCategory>
 
 </PreferenceScreen>
