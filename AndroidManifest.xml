@@ -25,6 +25,15 @@
         </activity>
 
 	    <activity
+		    android:name=".ui.SettingsActivity"
+		    android:label="@string/settings"
+		    android:theme="@style/AppTheme.Light" >
+		    <intent-filter>
+			    <action android:name="android.intent.action.MAIN" />
+		    </intent-filter>
+	    </activity>
+
+	    <activity
 		    android:name=".ui.task.AddActivity"
 		    android:label="@string/activity_title_add_task" >
 		    <intent-filter>

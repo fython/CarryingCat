@@ -4,7 +4,11 @@
     <facet type="android" name="Android">
       <configuration>
         <option name="LIBRARY_PROJECT" value="true" />
+<<<<<<< HEAD
         <option name="UPDATE_PROPERTY_FILES" value="false" />
+=======
+        <option name="UPDATE_PROPERTY_FILES" value="true" />
+>>>>>>> e52d8c9c8846d32e45dc7da58bd21e671a29419f
       </configuration>
     </facet>
   </component>

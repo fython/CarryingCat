@@ -6,4 +6,10 @@
 	    <item name="colorControlNormal">@android:color/white</item>
     </style>
 
+	<style name="AppTheme.Light" parent="Theme.AppCompat.Light">
+		<item name="colorPrimary">@color/deep_purple_500</item>
+		<item name="colorAccent">@color/purple_300</item>
+		<item name="colorControlNormal">@android:color/white</item>
+	</style>
+
 </resources>

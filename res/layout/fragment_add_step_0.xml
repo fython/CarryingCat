@@ -181,41 +181,45 @@
 
 				</LinearLayout>
 
+				<FrameLayout
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_weight="1"/>
+
+				<LinearLayout
+					android:orientation="horizontal"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="right|bottom"
+					android:layout_marginLeft="3dp"
+					android:layout_marginRight="3dp"
+					android:layout_marginBottom="3dp">
+
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_weight="3">
+					</LinearLayout>
+
+					<oppa.paperstyle.PaperButton
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:id="@+id/button"
+						app:pw_backgroundColor="@android:color/transparent"
+						app:pw_borderSize="0"
+						app:pw_focusColor="@color/grey_400"
+						android:textColor="@color/grey_900"
+						android:text="@string/button_next"
+						android:layout_marginRight="3dp"/>
+
+				</LinearLayout>
+
 			</LinearLayout>
 
 		</ScrollView>
 
 	</android.support.v7.widget.CardView>
-
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:gravity="right"
-		android:layout_marginLeft="3dp"
-	    android:layout_marginRight="3dp"
-	    android:layout_marginBottom="3dp"
-		>
-
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="3">
-		</LinearLayout>
-
-		<oppa.paperstyle.PaperButton
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:id="@+id/button"
-			app:pw_backgroundColor="@color/deep_purple_500"
-			app:pw_borderSize="0"
-			app:pw_focusColor="@color/deep_purple_200"
-			android:text="@string/button_next"
-			android:layout_marginRight="3dp"/>
-
-	</LinearLayout>
 
 </LinearLayout>

@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
 					return;
 				}
 				VideoItemTask vit = new VideoItemTask(vi);
-				vit.path = FileManager.getDownloadDirPath() + "/" + vit.srcs.get(0).title;
+				vit.path = FileManager.getDownloadDirPath(true) + "/" + vit.srcs.get(0).title;
 				if (mPager.getCurrentItem() != 1) {
 					mPager.setCurrentItem(1, true);
 				}

@@ -23,8 +23,9 @@ public class FileManager {
 		return android.os.Environment.getExternalStorageDirectory().toString() + "/CarryingCat";
 	}
 
-	public static String getDownloadDirPath() {
-		return Environment.getExternalStorageDirectory().toString() + "/Android/data/cn.fython.carryingcat/files/download";
+	public static String getDownloadDirPath(boolean withSDRoot) {
+		return (withSDRoot ? Environment.getExternalStorageDirectory().toString() : "")
+				+ "/Android/data/cn.fython.carryingcat/files/download";
 	}
 
 	public static String getMyVideoDirPath() {
@@ -43,7 +44,7 @@ public class FileManager {
 
 	public void initCarryingCatDirectory() {
 		File ccRoot = new File(getStorageDirPath());
-		File ccDownload = new File(getDownloadDirPath());
+		File ccDownload = new File(getDownloadDirPath(true));
 		File ccMyVideo = new File(getMyVideoDirPath());
 		if (!ccRoot.exists()) {
 			ccRoot.mkdirs();
