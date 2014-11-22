@@ -94,7 +94,7 @@ public class FileManager {
 	}
 
 	public String readFile(String name) throws IOException {
-		File file = mContext.getFileStreamPath(name);
+		File file = new File(name);
 		InputStream is = new FileInputStream(file);
 
 		byte b[] = new byte[(int) file.length()];

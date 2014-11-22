@@ -2,10 +2,13 @@ package cn.fython.carryingcat.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,16 +35,19 @@ import cn.fython.carryingcat.view.FloatingActionButton;
 public class MainActivity extends ActionBarActivity {
 
 	public static final int REQUEST_ADD_TASK = 10001;
+	public static final int HANDLER_REFRESH_MY_VIDEO = 0;
 
 	private ActionBar mActionBar;
 
-	private PagerSlidingTabStrip mTabView;
-	private ViewPager mPager;
-	private FloatingActionButton mActionBtn;
+	private static PagerSlidingTabStrip mTabView;
+	private static ViewPager mPager;
+	private static FloatingActionButton mActionBtn;
 
-	private HomePagerAdapter mPagerAdapter;
+	private static HomePagerAdapter mPagerAdapter;
 
 	FileManager fm;
+
+	private static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,11 +147,11 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	public LocalVideoFragment getLocalVideoFragment() {
+	public static LocalVideoFragment getLocalVideoFragment() {
 		return (LocalVideoFragment) mPagerAdapter.getItem(0);
 	}
 
-	public DownloadManagerFragment getDownloadManagerFragment() {
+	public static DownloadManagerFragment getDownloadManagerFragment() {
 		return (DownloadManagerFragment) mPagerAdapter.getItem(1);
 	}
 
@@ -167,4 +173,19 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	public static Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case HANDLER_REFRESH_MY_VIDEO:
+					getLocalVideoFragment().refreshList();
+					break;
+				default:
+					Log.e(TAG, "Received a unsupported message. Msg.what=" + msg.what);
+			}
+		}
+
+	};
 }
