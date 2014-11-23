@@ -1,12 +1,14 @@
 package cn.fython.carryingcat.ui.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
+import cn.fython.carryingcat.ui.video.DetailsActivity;
 
 public class LocalVideoFragment extends Fragment {
 
@@ -49,6 +52,21 @@ public class LocalVideoFragment extends Fragment {
 
 		mAdapter = new MyVideoListAdapter(mActivity.getApplicationContext(), new ArrayList<VideoItem>());
 		mListView.setAdapter(mAdapter);
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if (items != null && !mAdapter.isEmpty()) {
+					Intent intent = new Intent(getActivity(), DetailsActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+					intent.putExtra("provider_type", "carryingcat");
+					intent.putExtra("id", position);
+					startActivity(intent);
+				}
+			}
+
+		});
 
 		refreshLayout.setColorSchemeResources(
 				R.color.blue_500, R.color.green_500, R.color.brown_500,

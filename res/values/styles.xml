@@ -1,15 +1,31 @@
 <resources>
 
+	<style name="AppTheme.Main" parent="@style/AppTheme">
+		<item name="windowActionBar">false</item>
+	</style>
+
     <style name="AppTheme" parent="Theme.AppCompat">
 	    <item name="colorPrimary">@color/deep_purple_500</item>
+	    <item name="colorPrimaryDark">@color/deep_purple_700</item>
 	    <item name="colorAccent">@color/purple_300</item>
 	    <item name="colorControlNormal">@android:color/white</item>
+	    <item name="android:windowContentOverlay">@null</item>
     </style>
 
-	<style name="AppTheme.Light" parent="Theme.AppCompat.Light">
+	<style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
 		<item name="colorPrimary">@color/deep_purple_500</item>
+		<item name="colorPrimaryDark">@color/deep_purple_700</item>
 		<item name="colorAccent">@color/purple_300</item>
 		<item name="colorControlNormal">@android:color/white</item>
+	</style>
+
+	<style name="AppTheme.Light.TranslucentActionBar" parent="@style/AppTheme.Light">
+		<item name="windowActionBar">false</item>
+		<item name="android:actionBarStyle">@style/Widget.AppCompat.ActionBar.Translucent</item>
+	</style>
+
+	<style name="Widget.AppCompat.ActionBar.Translucent" parent="@style/Widget.AppCompat.Light.ActionBar">
+		<item name="android:colorBackground">@android:color/transparent</item>
 	</style>
 
 </resources>

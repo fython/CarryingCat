@@ -146,4 +146,15 @@ public class FileManager {
 		}
 	}
 
+	public static String findFirstVideoFile(String path) {
+		File[] list = new File(path).listFiles();
+		for (File file:list) {
+			String filePath = file.getAbsolutePath();
+			if (filePath.equals(".flv") || filePath.equals(".mp4") || filePath.equals(".m3u8")) {
+				return filePath;
+			}
+		}
+		return null;
+	}
+
 }

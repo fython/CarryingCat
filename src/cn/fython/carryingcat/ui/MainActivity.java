@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -94,6 +95,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void setUpActionBar() {
+		Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(tb);
+		
 		mActionBar = getSupportActionBar();
 		if (Utility.isLandscape(this)) {
 			mActionBar.setCustomView(R.layout.actionbar_custom_land);
@@ -169,6 +173,10 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra("flag", SettingsActivity.FLAG_MAIN);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
