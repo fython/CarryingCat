@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class MyVideoListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+			holder.tv_other = (TextView) convertView.findViewById(R.id.tv_other);
+			holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
 
 			convertView.setTag(holder);
 		} else {
@@ -53,12 +56,17 @@ public class MyVideoListAdapter extends BaseAdapter {
 
 		holder.tv_title.setText(getItem(position).srcs.get(0).title);
 
+		// TODO 用本地视频的实际数据替换API获取的数据
+		holder.tv_time.setText(getItem(position).srcs.get(0).getVideoUrl(0).time);
+		holder.tv_other.setText(getItem(position).srcs.get(0).getVideoUrl(0).size);
+
 		return convertView;
 	}
 
 	private class ViewHolder {
 
-		public TextView tv_title;
+		public TextView tv_title, tv_other, tv_time;
+		public ImageView iv_preview;
 
 	}
 
