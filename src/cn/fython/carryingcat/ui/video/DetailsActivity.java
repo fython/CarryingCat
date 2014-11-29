@@ -3,6 +3,10 @@ package cn.fython.carryingcat.ui.video;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,11 +17,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.cache.ImageLoader;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class DetailsActivity extends ActionBarActivity {
@@ -29,6 +36,8 @@ public class DetailsActivity extends ActionBarActivity {
 	private VideoItem item;
 
 	private static final String TAG = "DetailsActivity";
+
+	public static final String EXTRA_IMAGE = "DetailActivity:image", EXTRA_TITLE = "DetailActivity:title";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +54,22 @@ public class DetailsActivity extends ActionBarActivity {
 		}
 		int id = intent.getIntExtra("id", 0);
 		item = provider.getVideoList().get(id);
+		ArrayList<VideoItem> temp = new ArrayList<VideoItem>();
+		temp.add(item);
+		ImageLoader loader = new ImageLoader(
+				getApplicationContext(),
+				temp
+		);
 
 		Log.i(TAG, item.toJSONObject().toString());
 
+		TextView tv_title = (TextView) findViewById(R.id.tv_title);
+		ViewCompat.setTransitionName(tv_title, EXTRA_TITLE);
+		tv_title.setText(item.srcs.get(0).title);
+
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
+		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
+		loader.DisplayImage("" + 0, iv_preview, false);
 
 		FloatingActionButton fab = new FloatingActionButton.Builder(this)
 				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
@@ -71,8 +92,6 @@ public class DetailsActivity extends ActionBarActivity {
 
 		});
 
-		TextView tv_title = (TextView) findViewById(R.id.tv_title);
-		tv_title.setText(item.srcs.get(0).title);
 	}
 
 	private void setUpActionBar() {
@@ -81,6 +100,7 @@ public class DetailsActivity extends ActionBarActivity {
 
 		mActionBar = getSupportActionBar();
 		mActionBar.setDisplayHomeAsUpEnabled(true);
+		mActionBar.setTitle("");
 	}
 
 	@Override
@@ -93,6 +113,16 @@ public class DetailsActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-
+	public static void launch(ActionBarActivity activity, View[] translationView, String providerName, int id) {
+		Pair<View, String> pair0 = new Pair<View, String>(translationView[0], EXTRA_IMAGE),
+				pair1 = new Pair<View, String>(translationView[1], EXTRA_TITLE);
+		ActivityOptionsCompat options =
+				ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pair0, pair1);
+		Intent intent = new Intent(activity, DetailsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		intent.putExtra("provider_type", "carryingcat");
+		intent.putExtra("id", id);
+		ActivityCompat.startActivity(activity, intent, options.toBundle());
+	}
 
 }

@@ -8,10 +8,12 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.AddStepPagerAdapter;
+import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.StepOneFragment;
@@ -76,8 +78,10 @@ public class AddActivity extends ActionBarActivity {
 	}
 
 	public void finishAdding() {
+		data.path = FileManager.getDownloadDirPath(true) + "/" + data.srcs.get(0).title;
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("data", data.toJSONObject().toString());
+		Log.i("", data.toJSONObject().toString());
 		setResult(MainActivity.RESULT_OK, intent);
 		finish();
 	}

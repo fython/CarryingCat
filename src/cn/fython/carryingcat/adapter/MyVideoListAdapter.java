@@ -12,15 +12,19 @@ import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.cache.ImageLoader;
 
 public class MyVideoListAdapter extends BaseAdapter {
 
 	private ArrayList<VideoItem> items;
 	private Context context;
 
+	private ImageLoader loader;
+
 	public MyVideoListAdapter(Context context, ArrayList<VideoItem> items) {
 		this.context = context;
 		this.items = items;
+		this.loader = new ImageLoader(context, items);
 	}
 
 	@Override
@@ -59,6 +63,8 @@ public class MyVideoListAdapter extends BaseAdapter {
 		// TODO 用本地视频的实际数据替换API获取的数据
 		holder.tv_time.setText(getItem(position).srcs.get(0).getVideoUrl(0).time);
 		holder.tv_other.setText(getItem(position).srcs.get(0).getVideoUrl(0).size);
+
+		loader.DisplayImage("" + position, holder.iv_preview, false);
 
 		return convertView;
 	}

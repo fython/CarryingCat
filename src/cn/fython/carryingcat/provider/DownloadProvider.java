@@ -9,25 +9,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.support.FileManager;
-import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.VideoItemTask;
 
-public class CCProvider extends VideoItemProvider {
+public class DownloadProvider{
 
+	private Context context;
 	private FileManager fm;
 
-	public CCProvider(Context context) {
-		super(context);
+	public DownloadProvider(Context context) {
+		this.context = context;
 		fm = new FileManager(context);
 	}
 
-	@Override
-	public ArrayList<VideoItem> getVideoList() {
-		ArrayList<VideoItem> items = new ArrayList<VideoItem>();
+	public ArrayList<VideoItemTask> getTaskList() {
+		ArrayList<VideoItemTask> items = new ArrayList<VideoItemTask>();
 
-		ArrayList<String> dirs = fm.getPathsInPath(FileManager.getMyVideoDirPath());
+		ArrayList<String> dirs = fm.getPathsInPath(FileManager.getDownloadDirPath(true));
 		for (String dir:dirs) {
 			try {
-				VideoItem v = new VideoItem(new JSONObject(fm.readFile(dir + "/data.json")));
+				VideoItemTask v = new VideoItemTask(new JSONObject(fm.readFile(dir + "/data.json")));
 				items.add(v);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -39,9 +39,8 @@ public class CCProvider extends VideoItemProvider {
 		return items;
 	}
 
-	@Override
 	public String getProviderName() {
-		return "carryingcat";
+		return "downloadmanager";
 	}
 
 }

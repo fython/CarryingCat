@@ -67,6 +67,6 @@
 	<string name="about_email">Email</string>
 	<string name="about_email_address">fythonx\@gmail.com</string>
 	<string name="about_blog">Blog</string>
-	<string name="about_blog_address">http:\/\/fycafe.me</string>
+	<string name="about_blog_address">"http://fycafe.me"</string>
 
 </resources>

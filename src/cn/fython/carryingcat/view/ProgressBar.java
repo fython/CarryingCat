@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.nineoldandroids.animation.Animator;
@@ -39,7 +40,7 @@ public class ProgressBar extends CustomView {
 	protected void setAttributes(AttributeSet attrs){
 
 		progressView = new View(getContext());
-		RelativeLayout.LayoutParams params = new LayoutParams(1,1);
+		RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		progressView.setLayoutParams(params);
 		progressView.setBackgroundResource(R.drawable.background_progress);
 		addView(progressView);

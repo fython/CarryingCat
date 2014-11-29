@@ -132,12 +132,10 @@ public class FlvxzTools {
 					try {
 						vs.playurl = obj.getString("playurl");
 					} catch (Exception e) {
-						Log.i(TAG, "当前VideoSource无法读取playurl");
 					}
 					try {
 						vs.imgurl = obj.getString("img");
 					} catch (Exception e) {
-						Log.i(TAG, "当前VideoSource无法读取imgurl");
 					}
 					try {
 						vs.quality = obj.getString("quality");

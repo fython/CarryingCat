@@ -20,6 +20,7 @@ public class VideoItemTask extends VideoItem {
 	public VideoItemTask(VideoItem videoItem) {
 		JSONObject jsonObject = videoItem.toJSONObject();
 		try {
+			this.path = jsonObject.getString("path");
 			this.srcs = FlvxzTools.getVideoSource(jsonObject.getJSONArray("sources"));
 			this.selectedSource = jsonObject.getInt("selectedSource");
 		} catch (JSONException e) {
@@ -32,14 +33,33 @@ public class VideoItemTask extends VideoItem {
 	}
 
 	public VideoItemTask(JSONObject jsonObject) throws JSONException {
+		try {
+			this.path = jsonObject.getString("path");
+		} catch (JSONException e) {
+
+		}
 		this.srcs = FlvxzTools.getVideoSource(jsonObject.getJSONArray("sources"));
 		this.selectedSource = jsonObject.getInt("selectedSource");
 		JSONArray pg = jsonObject.getJSONArray("progress");
+		try {
+			this.mode = jsonObject.getInt("mode");
+		} catch (JSONException e) {
+
+		}
 		this.progress = new ArrayList<Integer>();
 		for (int i = 0; i < pg.length(); i++) {
 			this.progress.add(pg.getInt(i));
 		}
-		this.downloadId = jsonObject.getLong("downloadId");
+		try {
+			this.downloadId = jsonObject.getLong("downloadId");
+		} catch (JSONException e) {
+
+		}
+		try {
+			this.bytes = new int[] {jsonObject.getJSONArray("bytes").getInt(0), jsonObject.getJSONArray("bytes").getInt(1)};
+		} catch (JSONException e) {
+			this.bytes = new int[] {0, 0};
+		}
 	}
 
 	@Override
@@ -49,7 +69,13 @@ public class VideoItemTask extends VideoItem {
 		for (int i = 0; i < progress.size(); i++) {
 			progressArray.put(progress.get(i));
 		}
+		JSONArray bytesArray = new JSONArray();
+		for (int i = 0; i < bytes.length; i++) {
+			progressArray.put(bytes[i]);
+		}
 		try {
+			object.put("mode", mode);
+			object.put("bytes", bytesArray);
 			object.put("progress", progressArray);
 			object.put("downloadId", downloadId);
 		} catch (JSONException e) {

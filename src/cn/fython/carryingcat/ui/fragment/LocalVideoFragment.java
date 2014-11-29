@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,11 +59,12 @@ public class LocalVideoFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (items != null && !mAdapter.isEmpty()) {
-					Intent intent = new Intent(getActivity(), DetailsActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-					intent.putExtra("provider_type", "carryingcat");
-					intent.putExtra("id", position);
-					startActivity(intent);
+					DetailsActivity.launch(
+							(ActionBarActivity) getActivity(),
+							new View[] {view.findViewById(R.id.iv_preview), view.findViewById(R.id.tv_title)},
+							providers[0].getProviderName(),
+							position
+					);
 				}
 			}
 

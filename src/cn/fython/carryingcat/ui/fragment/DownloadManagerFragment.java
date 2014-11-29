@@ -20,11 +20,14 @@ import android.widget.ListView;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.DownloadManagerListAdapter;
+import cn.fython.carryingcat.provider.DownloadProvider;
+import cn.fython.carryingcat.support.CompleteReceiver;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItemTask;
 import cn.fython.carryingcat.support.download.DownloadManagerPro;
@@ -45,7 +48,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	private DownloadManagerPro dmPro;
 
 	private DownloadChangeObserver downloadObserver;
-	private CompleteReceiver completeReceiver;
+	private ChangeReceiver changeReceiver;
 
 	private MaterialDialog dialogDelete;
 
@@ -54,7 +57,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	public DownloadManagerFragment() {
 		mHandler = new DownloadHandler();
 		downloadObserver = new DownloadChangeObserver();
-		completeReceiver = new CompleteReceiver();
+		changeReceiver = new ChangeReceiver();
 	}
 
 	public static DownloadManagerFragment newInstance() {
@@ -74,12 +77,14 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 		dmPro = new DownloadManagerPro(dm);
 
 		mActivity.getApplicationContext().registerReceiver(
-				completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+				changeReceiver, new IntentFilter(CompleteReceiver.ACTION_UPDATE_PROGRESS)
 		);
 
 		mListView = (ListView) rootView.findViewById(R.id.listView);
 
-		mAdapter = new DownloadManagerListAdapter(getActivity().getApplicationContext(), new ArrayList<VideoItemTask>());
+		ArrayList<VideoItemTask> temp = new DownloadProvider(mActivity.getApplicationContext()).getTaskList();
+
+		mAdapter = new DownloadManagerListAdapter(getActivity().getApplicationContext(), temp);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -122,6 +127,9 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	public void onResume() {
 		super.onResume();
 		/** observer download change **/
+		ArrayList<VideoItemTask> temp = new DownloadProvider(mActivity.getApplicationContext()).getTaskList();
+		mAdapter = new DownloadManagerListAdapter(getActivity().getApplicationContext(), temp);
+		mListView.setAdapter(mAdapter);
 		mActivity.getApplicationContext()
 				.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, downloadObserver);
 		for (int i = 0; i < mAdapter.getCount(); i++) updateProgress(i);
@@ -137,8 +145,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mActivity.getApplicationContext()
-				.unregisterReceiver(completeReceiver);
+		mActivity.getApplicationContext().unregisterReceiver(changeReceiver);
 	}
 
 	@Override
@@ -238,7 +245,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	}
 
 	public void updateProgress(int index) {
-		VideoItemTask task = getTask(index);
+		final VideoItemTask task = getTask(index);
 		int[] bytesAndStatus = dmPro.getBytesAndStatus(task.downloadId);
 		task.bytes = dmPro.getDownloadBytes(task.downloadId);
 		if (task.progress.size() < 1) {
@@ -248,20 +255,20 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 		}
 		task.mode = bytesAndStatus[2];
 		if (task.mode == DownloadManager.STATUS_SUCCESSFUL) {
-			String oldPath = task.path;
-			task.path = FileManager.getMyVideoDirPath() + "/" + task.srcs.get(0).title;
-			try {
-				FileManager.copyDirectory(new File(oldPath), new File(task.path));
-				fm.saveFile(
-						task.path + "/data.json",
-						task.toJSONObject().toString()
-				);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			deleteTask(index, false);
 		}
 		mAdapter.notifyDataSetChanged();
+		new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					FileManager.saveFile(task.path + "/data.json", task.toJSONObject().toString());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}.start();
 	}
 
 	class DownloadChangeObserver extends ContentObserver {
@@ -277,25 +284,26 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 
 	}
 
-	class CompleteReceiver extends BroadcastReceiver {
+	class ChangeReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			/**
-			 * get the id of download which have download success, if the id is my id and it's status is successful,
-			 * then install it
-			 **/
-			long completeDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-			for (int i = 0; i < mAdapter.getCount(); i++) {
-				long downloadId = getTask(i).downloadId;
-				if (completeDownloadId == downloadId) {
-					updateProgress(i);
-					if (dmPro.getStatusById(downloadId) == DownloadManager.STATUS_SUCCESSFUL) {
-					}
+			int id = intent.getIntExtra("id", -1);
+			boolean delete = intent.getBooleanExtra("delete", false);
+			if (id != -1) {
+				try {
+					updateProgress(id);
+				} catch (Exception e) {
+
+				}
+				if (delete) {
+					deleteTask(id, false);
 				}
 			}
+
 		}
-	};
+
+	}
 
 	static final DecimalFormat DOUBLE_DECIMAL_FORMAT = new DecimalFormat("0.##");
 

@@ -50,7 +50,11 @@ public class VideoItem {
 	}
 
 	public VideoItem(JSONObject jsonObject) throws JSONException {
-		this.path = jsonObject.getString("path");
+		try {
+			this.path = jsonObject.getString("path");
+		} catch (JSONException e) {
+
+		}
 		this.srcs = FlvxzTools.getVideoSource(jsonObject.getJSONArray("sources"));
 		this.selectedSource = jsonObject.getInt("selectedSource");
 	}
