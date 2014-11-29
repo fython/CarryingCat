@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.support.VideoItemTask;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
-import cn.fython.carryingcat.view.ProgressBar;
 
 public class DownloadManagerListAdapter extends BaseAdapter {
 

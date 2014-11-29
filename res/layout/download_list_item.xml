@@ -46,12 +46,12 @@
 
 	</LinearLayout>
 
-	<cn.fython.carryingcat.view.ProgressBar
+	<ProgressBar
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/progressBar"
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="5dp"
-		android:paddingBottom="8dp"/>
+		android:paddingBottom="16dp"/>
 
 </LinearLayout>
