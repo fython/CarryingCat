@@ -166,7 +166,11 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	}
 
 	public void deleteTask(int index, boolean deleteFile) {
-		dm.remove(getTask(index).downloadId);
+		try {
+			dm.remove(getTask(index).downloadId);
+		} catch (Exception e) {
+
+		}
 		if (deleteFile) {
 			FileManager.deleteDir(getTask(index).path);
 		}

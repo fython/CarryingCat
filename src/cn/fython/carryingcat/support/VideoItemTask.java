@@ -55,11 +55,6 @@ public class VideoItemTask extends VideoItem {
 		} catch (JSONException e) {
 
 		}
-		try {
-			this.bytes = new int[] {jsonObject.getJSONArray("bytes").getInt(0), jsonObject.getJSONArray("bytes").getInt(1)};
-		} catch (JSONException e) {
-			this.bytes = new int[] {0, 0};
-		}
 	}
 
 	@Override
@@ -69,13 +64,8 @@ public class VideoItemTask extends VideoItem {
 		for (int i = 0; i < progress.size(); i++) {
 			progressArray.put(progress.get(i));
 		}
-		JSONArray bytesArray = new JSONArray();
-		for (int i = 0; i < bytes.length; i++) {
-			progressArray.put(bytes[i]);
-		}
 		try {
 			object.put("mode", mode);
-			object.put("bytes", bytesArray);
 			object.put("progress", progressArray);
 			object.put("downloadId", downloadId);
 		} catch (JSONException e) {
