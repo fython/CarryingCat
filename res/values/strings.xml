@@ -46,7 +46,6 @@
 	<string name="quality_choose">Choose quality</string>
 
 	<string name="download_noti_title">Downloading %s....</string>
-	<string name="download_noti_desc">Selected source: %1$s (%2$s)</string>
 	<string name="download_ask_for_deleting">Delete %s?</string>
 	<string name="download_ask_for_deleting_warning">WARNING: THIS OPERATION CANNOT RECOVER.</string>
 	<string name="status_downloading">Downloading</string>

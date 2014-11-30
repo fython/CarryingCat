@@ -109,8 +109,10 @@ public class FileManager {
 
 	public void makeDir(String path) {
 		File file = new File(path);
-		if (!file.exists() | file.isFile()) {
-			file.mkdir();
+		try {
+			file.mkdirs();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

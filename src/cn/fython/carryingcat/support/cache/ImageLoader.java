@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
@@ -54,7 +53,7 @@ public class ImageLoader {
 		try {
 			b = BitmapFactory.decodeFile(data.get((int) id).path + "/.preview");
 		} catch (Exception e) {
-			b = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.test_album);
+			b = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_preview);
 			e.printStackTrace();
 		}
 		return b;

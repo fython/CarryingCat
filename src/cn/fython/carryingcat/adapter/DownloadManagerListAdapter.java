@@ -12,16 +12,16 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
-import cn.fython.carryingcat.support.VideoItemTask;
+import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 
 public class DownloadManagerListAdapter extends BaseAdapter {
 
 	private Context mContext;
 
-	private ArrayList<VideoItemTask> tasks;
+	private ArrayList<Task> tasks;
 
-	public DownloadManagerListAdapter(Context context, ArrayList<VideoItemTask> tasks) {
+	public DownloadManagerListAdapter(Context context, ArrayList<Task> tasks) {
 		mContext = context;
 		this.tasks = tasks;
 	}
@@ -32,7 +32,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public VideoItemTask getItem(int position) {
+	public Task getItem(int position) {
 		return tasks.get(position);
 	}
 
@@ -41,8 +41,12 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	public void addItem(VideoItemTask task) {
+	public void addItem(Task task) {
 		tasks.add(task);
+	}
+
+	public void setItem(int index, Task task) {
+		tasks.set(index, task);
 	}
 
 	public void removeItem(int index) {
@@ -54,7 +58,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 		ViewHolder holder;
 
 		int index = (int) getItemId(position);
-		VideoItemTask targetTask = tasks.get(index);
+		Task targetTask = tasks.get(index);
 
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.download_list_item, null);
@@ -69,7 +73,7 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		holder.title.setText(targetTask.srcs.get(tasks.get(index).selectedSource).title);
+		holder.title.setText(targetTask.title);
 		holder.size.setText(DownloadManagerFragment.getSize(targetTask.bytes[0]) + "/" + DownloadManagerFragment.getSize(targetTask.bytes[1]));
 		try {
 			holder.pb.setIndeterminate(false);

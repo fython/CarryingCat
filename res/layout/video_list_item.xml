@@ -13,7 +13,7 @@
 		android:layout_height="64dp"
 		android:layout_margin="8dp"
 		android:id="@+id/iv_preview"
-		android:src="@drawable/test_album"
+		android:src="@drawable/no_preview"
 		android:scaleType="centerCrop"/>
 
 	<LinearLayout

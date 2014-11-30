@@ -52,6 +52,7 @@
 		android:id="@+id/progressBar"
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="5dp"
+		style="?android:attr/progressBarStyleHorizontal"
 		android:paddingBottom="16dp"/>
 
 </LinearLayout>

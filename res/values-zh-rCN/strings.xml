@@ -46,7 +46,6 @@
 	<string name="quality_choose">选择质量</string>
 
 	<string name="download_noti_title">正在下载 %s....</string>
-	<string name="download_noti_desc">已选视频源: %1$s (%2$s)</string>
 	<string name="download_ask_for_deleting">确认删除 %s?</string>
 	<string name="download_ask_for_deleting_warning">警告：此操作不可恢复。</string>
 	<string name="status_downloading">下载中</string>

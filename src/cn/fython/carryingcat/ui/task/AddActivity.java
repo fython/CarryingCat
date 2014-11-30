@@ -78,7 +78,7 @@ public class AddActivity extends ActionBarActivity {
 	}
 
 	public void finishAdding() {
-		data.path = FileManager.getDownloadDirPath(true) + "/" + data.srcs.get(0).title;
+		data.path = FileManager.getMyVideoDirPath() + "/" + data.srcs.get(0).title;
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("data", data.toJSONObject().toString());
 		Log.i("", data.toJSONObject().toString());

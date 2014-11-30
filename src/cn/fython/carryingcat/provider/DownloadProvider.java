@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.support.FileManager;
-import cn.fython.carryingcat.support.VideoItemTask;
+import cn.fython.carryingcat.support.Task;
 
 public class DownloadProvider{
 
@@ -21,13 +21,13 @@ public class DownloadProvider{
 		fm = new FileManager(context);
 	}
 
-	public ArrayList<VideoItemTask> getTaskList() {
-		ArrayList<VideoItemTask> items = new ArrayList<VideoItemTask>();
+	public ArrayList<Task> getTaskList() {
+		ArrayList<Task> items = new ArrayList<Task>();
 
 		ArrayList<String> dirs = fm.getPathsInPath(FileManager.getDownloadDirPath(true));
 		for (String dir:dirs) {
 			try {
-				VideoItemTask v = new VideoItemTask(new JSONObject(fm.readFile(dir + "/data.json")));
+				Task v = new Task(new JSONObject(fm.readFile(dir + "/task.json")));
 				items.add(v);
 			} catch (IOException e) {
 				e.printStackTrace();

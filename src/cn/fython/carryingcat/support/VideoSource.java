@@ -33,6 +33,10 @@ public class VideoSource {
 		return urls.get(position);
 	}
 
+	public int getVideoUrlCount() {
+		return urls.size();
+	}
+
 	public JSONObject toJSONObject() {
 		JSONObject object = new JSONObject();
 		try {

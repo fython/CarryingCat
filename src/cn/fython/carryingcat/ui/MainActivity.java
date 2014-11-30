@@ -2,6 +2,7 @@ package cn.fython.carryingcat.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
@@ -25,9 +26,9 @@ import java.io.IOException;
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.HomePagerAdapter;
 import cn.fython.carryingcat.support.FileManager;
+import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
-import cn.fython.carryingcat.support.VideoItemTask;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.ui.fragment.LocalVideoFragment;
 import cn.fython.carryingcat.ui.task.AddActivity;
@@ -128,23 +129,30 @@ public class MainActivity extends ActionBarActivity {
 					e.printStackTrace();
 					return;
 				}
-				VideoItemTask vit = new VideoItemTask(vi);
+
+				/** Build New Task **/
+				Task newTask = new Task.Builder().setDataFromVideoItem(vi).build();
+				Log.i(TAG, newTask.toJSONObject().toString());
 				if (mPager.getCurrentItem() != 1) {
 					mPager.setCurrentItem(1, true);
 				}
 
-				Log.i(TAG, vit.toJSONObject().toString());
+				Log.i(TAG, newTask.toJSONObject().toString());
 
 				if (fm == null) {
 					fm = new FileManager(getApplicationContext());
 				}
 				try {
-					fm.makeDir(vit.path);
+					fm.makeDir(Environment.getExternalStorageDirectory() + newTask.downloadPath);
 					fm.saveFile(
-							vit.path + "/data.json",
-							vit.toJSONObject().toString()
+							Environment.getExternalStorageDirectory() + newTask.downloadPath + "/task.json",
+							newTask.toJSONObject().toString()
 					);
-					getDownloadManagerFragment().receiveNewTask(vit);
+					fm.saveFile(
+							Environment.getExternalStorageDirectory() + newTask.downloadPath + "/data.json",
+							vi.toJSONObject().toString()
+					);
+					getDownloadManagerFragment().receiveNewTask(newTask);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
