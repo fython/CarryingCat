@@ -27,6 +27,7 @@ import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.DownloadManagerListAdapter;
 import cn.fython.carryingcat.provider.DownloadProvider;
 import cn.fython.carryingcat.support.CompleteReceiver;
+import cn.fython.carryingcat.support.DownloadManagerHelper;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.download.DownloadManagerPro;
@@ -38,17 +39,13 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	private MainActivity mActivity;
 
 	private ListView mListView;
-	private DownloadManagerListAdapter mAdapter;
-	private ArrayList<Task> tasks;
+	private DownloadManagerHelper mHelper;
 
 	private DownloadHandler mHandler;
 
 	private FileManager fm;
 	private DownloadManager dm;
 	private DownloadManagerPro dmPro;
-
-	private DownloadChangeObserver downloadObserver;
-	private ChangeReceiver changeReceiver;
 
 	private MaterialDialog dialogDelete;
 
@@ -58,8 +55,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 
 	public DownloadManagerFragment() {
 		mHandler = new DownloadHandler();
-		downloadObserver = new DownloadChangeObserver();
-		changeReceiver = new ChangeReceiver();
+		mHelper = new DownloadManagerHelper(mHandler);
 	}
 
 	public static DownloadManagerFragment newInstance() {
@@ -74,38 +70,40 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 
 		mActivity = (MainActivity) getActivity();
 
+		mHelper.init(mActivity.getApplicationContext());
+
 		fm = new FileManager(mActivity.getApplicationContext());
 		dm = (DownloadManager) mActivity.getApplicationContext().getSystemService(Context.DOWNLOAD_SERVICE);
 		dmPro = new DownloadManagerPro(dm);
 
 		mActivity.getApplicationContext().registerReceiver(
-				changeReceiver, new IntentFilter(CompleteReceiver.ACTION_UPDATE_PROGRESS)
+				mHelper.getChangeReceiver(), new IntentFilter(CompleteReceiver.ACTION_UPDATE_PROGRESS)
 		);
 
 		mListView = (ListView) rootView.findViewById(R.id.listView);
 
-		tasks = new DownloadProvider(mActivity.getApplicationContext()).getTaskList();
+		mHelper.bindListView(mListView);
+		mHelper.initDataFromProvider();
+		mHelper.initAdapter();
 
-		mAdapter = new DownloadManagerListAdapter(getActivity().getApplicationContext(), tasks);
-		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.i(TAG, "position " + position + " is clicked.");
-				switch (getTask(position).mode) {
+				switch (mHelper.getTask(position).mode) {
 					case DownloadManager.STATUS_RUNNING:
-						dmPro.pauseDownload(getTask(position).downloadId);
+						dmPro.pauseDownload(mHelper.getTask(position).downloadId);
 						break;
 					case DownloadManager.STATUS_FAILED:
-						Task task = getTask(position);
-						deleteTask(position, false);
-						restartTask(task);
+						Task task = mHelper.getTask(position);
+						mHelper.deleteTask(position, false);
+						mHelper.restartTask(task);
 						break;
 					case DownloadManager.STATUS_PENDING:
 						break;
 					case DownloadManager.STATUS_PAUSED:
-						dmPro.resumeDownload(getTask(position).downloadId);
+						dmPro.resumeDownload(mHelper.getTask(position).downloadId);
 						break;
 				}
 			}
@@ -131,14 +129,12 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	public void onResume() {
 		super.onResume();
 		/** observer download change **/
-		mActivity.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, downloadObserver);
+		mActivity.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, mHelper.getDownloadObserver());
 		if (shouldRefresh) {
-			tasks = new DownloadProvider(mActivity.getApplicationContext()).getTaskList();
-			mAdapter = new DownloadManagerListAdapter(getActivity().getApplicationContext(), tasks);
-			mListView.setAdapter(mAdapter);
 			mActivity.getApplicationContext()
-					.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, downloadObserver);
-			for (int i = 0; i < tasks.size(); i++) updateProgress(i);
+					.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, mHelper.getDownloadObserver());
+			mHelper.initDataFromProvider();
+			mHelper.updateProgress();
 		}
 	}
 
@@ -146,54 +142,29 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	public void onPause() {
 		super.onPause();
 		mActivity.getApplicationContext()
-				.getContentResolver().unregisterContentObserver(downloadObserver);
+				.getContentResolver().unregisterContentObserver(mHelper.getDownloadObserver());
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mActivity.getApplicationContext().unregisterReceiver(changeReceiver);
+		mActivity.getApplicationContext().unregisterReceiver(mHelper.getChangeReceiver());
 	}
 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.fl_start_all) {
-			for (int i = 0; i < tasks.size(); i++) {
-				switch (getTask(i).mode) {
-					case DownloadManager.STATUS_FAILED:
-						Task task = getTask(i);
-						deleteTask(i, false);
-						restartTask(task);
-						break;
-					case DownloadManager.STATUS_PAUSED:
-						dmPro.resumeDownload(getTask(i).downloadId);
-						break;
-				}
-			}
+			mHelper.restartAll();
 			return;
 		} else if (id == R.id.fl_pause_all) {
-			for (int i = 0; i < tasks.size(); i++) dmPro.pauseDownload(getTask(i).downloadId);
+			mHelper.pauseAll();
 			return;
 		} else if (id == R.id.fl_delete_all) {
-			for (;tasks.size() != 0;) deleteTask(0, true);
+			mHelper.deleteAll();
 			return;
 		} else {
 			// Nothing to do
-		}
-	}
-
-	public void deleteTask(int index, boolean deleteFile) {
-		try {
-			dm.remove(getTask(index).downloadId);
-			if (deleteFile) {
-				FileManager.deleteDir(getTask(index).downloadPath);
-			}
-			tasks.remove(index);
-			mAdapter.removeItem(index);
-			mAdapter.notifyDataSetChanged();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -204,7 +175,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 					.setPositiveButton(android.R.string.ok, new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							deleteTask(index, true);
+							mHelper.deleteTask(index, true);
 							dialogDelete.dismiss();
 						}
 					})
@@ -219,127 +190,25 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 		dialogDelete.setTitle(
 				String.format(
 						getString(R.string.download_ask_for_deleting),
-						getTask(index).title
+						mHelper.getTask(index).title
 				)
 		);
 		dialogDelete.show();
 	}
 
-	public Task getTask(int index) {
-		return tasks.get(index);
-	}
-
 	public void receiveNewTask(Task task) {
 		Log.i(TAG, "receiverNewTask!");
 		Log.i(TAG, "Task data: " + task.toJSONObject().toString());
-		restartTask(task);
+		mHelper.restartTask(task);
 	}
 
-	public void restartTask(Task task) {
-		DownloadManager.Request request;
-		request = new DownloadManager.Request(Uri.parse(task.urls.get(0)));
-		request.setDestinationInExternalPublicDir(
-				task.downloadPath,
-				task.fileName
-		);
-		request.setTitle(String.format(getString(R.string.download_noti_title), task.title));
-		request.setDescription(task.fileName);
-		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-		request.setVisibleInDownloadsUi(false);
-		request.setMimeType("video/cn.fython.carryingcat");
-
-		task.downloadId = dm.enqueue(request);
-		Log.i(TAG, task.toJSONObject().toString());
-		tasks.add(task);
-		shouldRefresh = false;
-		mAdapter = new DownloadManagerListAdapter(mActivity.getApplicationContext(), tasks);
-	}
-
-	private class DownloadHandler extends Handler {
+	public class DownloadHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message m) {
 			switch (m.what) {
 
 			}
-		}
-
-	}
-
-	public void updateProgress(int index) {
-		Task task = getTask(index);
-		Log.i(TAG, "update:" + task.toJSONObject().toString());
-
-		int[] bytesAndStatus = dmPro.getBytesAndStatus(task.downloadId);
-		task.bytes = dmPro.getDownloadBytes(task.downloadId);
-		if (task.progress.size() < 1) {
-			task.progress.add((int) ((double) bytesAndStatus[0] / bytesAndStatus[1] * 100));
-		} else {
-			task.progress.set(0, (int) ((double) bytesAndStatus[0] / bytesAndStatus[1] * 100));
-		}
-		task.mode = bytesAndStatus[2];
-		if (task.mode == DownloadManager.STATUS_SUCCESSFUL) {
-		}
-		mAdapter.setItem(index, task);
-		mAdapter.notifyDataSetChanged();
-
-		new SaveThread(index).start();
-	}
-
-	private class SaveThread extends Thread {
-
-		private int index;
-
-		public SaveThread(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public void run() {
-			try {
-				FileManager.saveFile(
-						Environment.getExternalStorageDirectory() +
-								getTask(index).downloadPath + "/task.json",
-						getTask(index).toJSONObject().toString()
-				);
-				if (!shouldRefresh) shouldRefresh = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	class DownloadChangeObserver extends ContentObserver {
-
-		public DownloadChangeObserver() {
-			super(mHandler);
-		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			for (int i = 0; i < tasks.size(); i++) updateProgress(i);
-		}
-
-	}
-
-	class ChangeReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			int id = intent.getIntExtra("id", -1);
-			boolean delete = intent.getBooleanExtra("delete", false);
-			if (id != -1) {
-				try {
-					updateProgress(id);
-				} catch (Exception e) {
-
-				}
-				if (delete) {
-					deleteTask(id, false);
-				}
-			}
-
 		}
 
 	}
