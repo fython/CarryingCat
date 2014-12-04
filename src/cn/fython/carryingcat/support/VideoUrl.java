@@ -40,18 +40,14 @@ public class VideoUrl {
 	}
 
 	public JSONObject toJSONObject() {
-		JSONObject object = new JSONObject();
-		try {
-			object.put("furl", url);
-			object.put("ftype", type);
-			object.put("bytes", bytes);
-			object.put("seconds", seconds);
-			object.put("time", time);
-			object.put("size", size);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return object;
+		JSONHelper helper = new JSONHelper();
+		helper.write("furl", url);
+		helper.write("ftype", type);
+		helper.write("bytes", bytes);
+		helper.write("seconds", seconds);
+		helper.write("time", time);
+		helper.write("size", size);
+		return helper.toJSONObject();
 	}
 
 }

@@ -60,19 +60,15 @@ public class VideoItem {
 	}
 
 	public JSONObject toJSONObject() {
-		JSONObject object = new JSONObject();
-		try {
-			JSONArray array = new JSONArray();
-			for (VideoSource src:srcs) {
-				array.put(src.toJSONObject());
-			}
-			object.put("path", path);
-			object.put("sources", array);
-			object.put("selectedSource", selectedSource);
-		} catch (JSONException e) {
-			e.printStackTrace();
+		JSONHelper helper = new JSONHelper();
+		JSONArrayHelper<JSONObject> array = new JSONArrayHelper<JSONObject>();
+		for (VideoSource src:srcs) {
+			array.put(src.toJSONObject());
 		}
-		return object;
+		helper.write("path", path);
+		helper.write("sources", array.toJSONArray());
+		helper.write("selectedSource", selectedSource);
+		return helper.toJSONObject();
 	}
 
 }
