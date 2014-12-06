@@ -119,7 +119,7 @@ public class FileManager {
 		}
 	}
 
-	public String readFile(String name) throws IOException {
+	public static String readFile(String name) throws IOException {
 		File file = new File(name);
 		InputStream is = new FileInputStream(file);
 

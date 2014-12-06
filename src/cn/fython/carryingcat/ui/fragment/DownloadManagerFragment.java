@@ -2,12 +2,15 @@ package cn.fython.carryingcat.ui.fragment;
 
 import android.app.DownloadManager;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,9 +24,10 @@ import cn.fython.carryingcat.support.download.DownloadManagerHelper;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.download.DownloadManagerPro;
 import cn.fython.carryingcat.ui.MainActivity;
+import cn.fython.carryingcat.ui.SettingsActivity;
 import me.drakeet.materialdialog.MaterialDialog;
 
-public class DownloadManagerFragment extends Fragment implements View.OnClickListener {
+public class DownloadManagerFragment extends Fragment {
 
 	private MainActivity mActivity;
 
@@ -38,6 +42,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	public DownloadManagerFragment() {
 		mHandler = new DownloadHandler();
 		mHelper = new DownloadManagerHelper(mHandler);
+		this.setHasOptionsMenu(true);
 	}
 
 	public static DownloadManagerFragment newInstance() {
@@ -95,10 +100,6 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 			}
 		});
 
-		rootView.findViewById(R.id.fl_start_all).setOnClickListener(this);
-		rootView.findViewById(R.id.fl_pause_all).setOnClickListener(this);
-		rootView.findViewById(R.id.fl_delete_all).setOnClickListener(this);
-
 		return rootView;
 	}
 
@@ -129,20 +130,25 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	}
 
 	@Override
-	public void onClick(View v) {
-		int id = v.getId();
-		if (id == R.id.fl_start_all) {
+	public void onPrepareOptionsMenu(Menu menu) {
+		mActivity.getMenuInflater().inflate(R.menu.download_manager, menu);
+		super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.start_all) {
 			mHelper.restartAll();
-			return;
-		} else if (id == R.id.fl_pause_all) {
+			return true;
+		} else if (id == R.id.pause_all) {
 			mHelper.pauseAll();
-			return;
-		} else if (id == R.id.fl_delete_all) {
+			return true;
+		} else if (id == R.id.delete_all) {
 			mHelper.deleteAll();
-			return;
-		} else {
-			// Nothing to do
+			return true;
 		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void showDeleteDialog(final int index) {

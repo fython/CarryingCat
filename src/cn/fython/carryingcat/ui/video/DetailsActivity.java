@@ -22,7 +22,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -31,6 +35,7 @@ import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class DetailsActivity extends ActionBarActivity {
@@ -95,6 +100,21 @@ public class DetailsActivity extends ActionBarActivity {
 			}.start();
 		}
 
+		if (item.srcs.get(item.selectedSource).getVideoUrl(0).size.contains("0B")) {
+			try {
+				String videoPath = FileManager.findFirstVideoFile(item.path);
+				File vf = new File(videoPath);
+				VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
+				vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
+						String.valueOf(DownloadManagerFragment.getSize(vf.length()));
+				FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		FloatingActionButton fab = new FloatingActionButton.Builder(this)
 				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
 				.withButtonColor(getResources().getColor(R.color.pink_500))
@@ -131,7 +151,7 @@ public class DetailsActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			finish();
+			super.onBackPressed();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

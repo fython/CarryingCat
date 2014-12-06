@@ -169,13 +169,14 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		MenuItem itemSearch = menu.findItem(R.id.action_search);
 		MenuItemCompat.setShowAsAction(itemSearch, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 
-		return true;
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override

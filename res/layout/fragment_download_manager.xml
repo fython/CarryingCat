@@ -5,112 +5,12 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:paddingBottom="@dimen/activity_vertical_margin"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin">
 
 	<ListView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:id="@+id/listView"
 		android:divider="@null"/>
-
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-		<FrameLayout
-			android:id="@+id/fl_start_all"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_weight="1">
-
-			<LinearLayout
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center">
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:paddingTop="10dp"
-					android:paddingBottom="5dp"
-					android:src="@drawable/ic_play_arrow_grey300_24dp"/>
-
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:paddingBottom="5dp"
-					android:text="@string/button_start_all"
-					android:gravity="center"/>
-
-			</LinearLayout>
-
-
-		</FrameLayout>
-
-		<FrameLayout
-			android:id="@+id/fl_pause_all"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_weight="1">
-
-			<LinearLayout
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center">
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:paddingTop="10dp"
-					android:paddingBottom="5dp"
-					android:src="@drawable/ic_pause_grey300_24dp"/>
-
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:paddingBottom="5dp"
-					android:text="@string/button_pause_all"
-					android:gravity="center"/>
-
-			</LinearLayout>
-
-		</FrameLayout>
-
-		<FrameLayout
-			android:id="@+id/fl_delete_all"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_weight="1">
-
-			<LinearLayout
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center">
-
-				<ImageView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:paddingTop="10dp"
-					android:paddingBottom="5dp"
-					android:src="@drawable/ic_delete_white_24dp"/>
-
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:paddingBottom="5dp"
-					android:text="@string/button_delete_all"
-					android:gravity="center"/>
-
-			</LinearLayout>
-
-		</FrameLayout>
-
-	</LinearLayout>
 
 </LinearLayout>

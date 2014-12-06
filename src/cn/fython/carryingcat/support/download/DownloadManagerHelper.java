@@ -18,6 +18,7 @@ import cn.fython.carryingcat.adapter.DownloadManagerListAdapter;
 import cn.fython.carryingcat.provider.DownloadProvider;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.Task;
+import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 
 public class DownloadManagerHelper {
@@ -87,14 +88,14 @@ public class DownloadManagerHelper {
 		try {
 			dm.remove(getTask(index).downloadId);
 			if (deleteFile) {
-				FileManager.deleteDir(getTask(index).downloadPath);
+				FileManager.deleteDir(Environment.getExternalStorageDirectory() + getTask(index).downloadPath);
 			}
 			tasks.remove(index);
 			mAdapter.removeItem(index);
-			mAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		mAdapter.notifyDataSetChanged();
 	}
 
 	public void restartAll() {
@@ -153,6 +154,7 @@ public class DownloadManagerHelper {
 		}
 		task.mode = bytesAndStatus[2];
 		if (task.mode == DownloadManager.STATUS_SUCCESSFUL) {
+			MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
 		}
 		mAdapter.setItem(index, task);
 		mAdapter.notifyDataSetChanged();
