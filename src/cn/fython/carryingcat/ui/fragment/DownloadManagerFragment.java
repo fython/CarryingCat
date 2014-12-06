@@ -2,14 +2,8 @@ package cn.fython.carryingcat.ui.fragment;
 
 import android.app.DownloadManager;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,16 +13,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
-import cn.fython.carryingcat.adapter.DownloadManagerListAdapter;
-import cn.fython.carryingcat.provider.DownloadProvider;
 import cn.fython.carryingcat.support.CompleteReceiver;
-import cn.fython.carryingcat.support.DownloadManagerHelper;
-import cn.fython.carryingcat.support.FileManager;
+import cn.fython.carryingcat.support.download.DownloadManagerHelper;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.download.DownloadManagerPro;
 import cn.fython.carryingcat.ui.MainActivity;
@@ -40,16 +29,9 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 
 	private ListView mListView;
 	private DownloadManagerHelper mHelper;
-
 	private DownloadHandler mHandler;
 
-	private FileManager fm;
-	private DownloadManager dm;
-	private DownloadManagerPro dmPro;
-
 	private MaterialDialog dialogDelete;
-
-	private boolean shouldRefresh = true;
 
 	private final static String TAG = "DownloadManagerFragment";
 
@@ -72,19 +54,14 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 
 		mHelper.init(mActivity.getApplicationContext());
 
-		fm = new FileManager(mActivity.getApplicationContext());
-		dm = (DownloadManager) mActivity.getApplicationContext().getSystemService(Context.DOWNLOAD_SERVICE);
-		dmPro = new DownloadManagerPro(dm);
-
 		mActivity.getApplicationContext().registerReceiver(
 				mHelper.getChangeReceiver(), new IntentFilter(CompleteReceiver.ACTION_UPDATE_PROGRESS)
 		);
 
 		mListView = (ListView) rootView.findViewById(R.id.listView);
 
-		mHelper.bindListView(mListView);
 		mHelper.initDataFromProvider();
-		mHelper.initAdapter();
+		mHelper.bindListView(mListView);
 
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -93,7 +70,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 				Log.i(TAG, "position " + position + " is clicked.");
 				switch (mHelper.getTask(position).mode) {
 					case DownloadManager.STATUS_RUNNING:
-						dmPro.pauseDownload(mHelper.getTask(position).downloadId);
+						mHelper.pauseTask(position);
 						break;
 					case DownloadManager.STATUS_FAILED:
 						Task task = mHelper.getTask(position);
@@ -103,7 +80,7 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 					case DownloadManager.STATUS_PENDING:
 						break;
 					case DownloadManager.STATUS_PAUSED:
-						dmPro.resumeDownload(mHelper.getTask(position).downloadId);
+						mHelper.resumeTask(position);
 						break;
 				}
 			}
@@ -129,10 +106,10 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 	public void onResume() {
 		super.onResume();
 		/** observer download change **/
-		mActivity.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, mHelper.getDownloadObserver());
-		if (shouldRefresh) {
-			mActivity.getApplicationContext()
-					.getContentResolver().registerContentObserver(DownloadManagerPro.CONTENT_URI, true, mHelper.getDownloadObserver());
+		mActivity.getContentResolver().registerContentObserver(
+				DownloadManagerPro.CONTENT_URI, true, mHelper.getDownloadObserver()
+		);
+		if (mHelper.shouldRefresh) {
 			mHelper.initDataFromProvider();
 			mHelper.updateProgress();
 		}
@@ -230,18 +207,6 @@ public class DownloadManagerFragment extends Fragment implements View.OnClickLis
 		} else {
 			return size + "B";
 		}
-	}
-
-	public static String getNotiPercent(long progress, long max) {
-		int rate = 0;
-		if (progress <= 0 || max <= 0) {
-			rate = 0;
-		} else if (progress > max) {
-			rate = 100;
-		} else {
-			rate = (int)((double)progress / max * 100);
-		}
-		return new StringBuilder(16).append(rate).append("%").toString();
 	}
 
 }

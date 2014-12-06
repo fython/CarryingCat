@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -51,7 +52,8 @@ public class CompleteReceiver extends BroadcastReceiver {
 				if (dmPro.getStatusById(downloadId) == DownloadManager.STATUS_SUCCESSFUL) {
 					String oldPath = task.downloadPath;
 					try {
-						FileManager.copyDirectory(new File(oldPath), new File(task.targetPath));
+						FileManager.copyDirectory(new File(Environment.getExternalStorageDirectory() + oldPath), new File(task.targetPath));
+						FileManager.deleteDir(Environment.getExternalStorageDirectory() + oldPath);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

@@ -1,4 +1,4 @@
-package cn.fython.carryingcat.support;
+package cn.fython.carryingcat.support.download;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.DownloadManagerListAdapter;
 import cn.fython.carryingcat.provider.DownloadProvider;
-import cn.fython.carryingcat.support.download.DownloadManagerPro;
+import cn.fython.carryingcat.support.FileManager;
+import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 
 public class DownloadManagerHelper {
@@ -34,6 +35,8 @@ public class DownloadManagerHelper {
 	private DownloadManager dm;
 	private DownloadManagerPro dmPro;
 
+	public boolean shouldRefresh = false;
+
 	private static final String TAG = "DownloadManagerHelper";
 
 	public DownloadManagerHelper(DownloadManagerFragment.DownloadHandler mHandler) {
@@ -50,6 +53,7 @@ public class DownloadManagerHelper {
 
 	public void bindListView(ListView listView) {
 		this.mListView = listView;
+		initAdapter();
 	}
 
 	public void initDataFromProvider() {
@@ -58,7 +62,9 @@ public class DownloadManagerHelper {
 
 	public void initAdapter() {
 		mAdapter = new DownloadManagerListAdapter(mContext, tasks);
-		mListView.setAdapter(mAdapter);
+		if (mListView != null) {
+			mListView.setAdapter(mAdapter);
+		}
 	}
 
 	public void updateProgress() {
@@ -67,6 +73,14 @@ public class DownloadManagerHelper {
 
 	public Task getTask(int index) {
 		return tasks.get(index);
+	}
+
+	public void pauseTask(int position) {
+		dmPro.pauseDownload(getTask(position).downloadId);
+	}
+
+	public void resumeTask(int position) {
+		dmPro.resumeDownload(getTask(position).downloadId);
 	}
 
 	public void deleteTask(int index, boolean deleteFile) {
@@ -122,10 +136,11 @@ public class DownloadManagerHelper {
 		task.downloadId = dm.enqueue(request);
 		Log.i(TAG, task.toJSONObject().toString());
 		tasks.add(task);
-		mAdapter = new DownloadManagerListAdapter(mContext, tasks);
+		initAdapter();
 	}
 
 	public void updateProgress(int index) {
+		shouldRefresh = false;
 		Task task = getTask(index);
 		Log.i(TAG, "update:" + task.toJSONObject().toString());
 
@@ -161,6 +176,7 @@ public class DownloadManagerHelper {
 								getTask(index).downloadPath + "/task.json",
 						getTask(index).toJSONObject().toString()
 				);
+				shouldRefresh = true;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -184,6 +200,7 @@ public class DownloadManagerHelper {
 
 		@Override
 		public void onChange(boolean selfChange) {
+			Log.i(TAG, "onChange");
 			for (int i = 0; i < tasks.size(); i++) updateProgress(i);
 		}
 

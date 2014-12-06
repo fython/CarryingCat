@@ -2,6 +2,7 @@ package cn.fython.carryingcat.support;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -150,9 +151,10 @@ public class FileManager {
 
 	public static String findFirstVideoFile(String path) {
 		File[] list = new File(path).listFiles();
+		Log.i("findFirstVideoFile", list.toString());
 		for (File file:list) {
 			String filePath = file.getAbsolutePath();
-			if (filePath.equals(".flv") || filePath.equals(".mp4") || filePath.equals(".m3u8")) {
+			if (filePath.contains(".flv") || filePath.contains(".mp4") || filePath.contains(".m3u8")) {
 				return filePath;
 			}
 		}
