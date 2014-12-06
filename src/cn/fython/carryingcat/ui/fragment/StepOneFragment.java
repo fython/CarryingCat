@@ -2,19 +2,17 @@ package cn.fython.carryingcat.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,13 +38,14 @@ public class StepOneFragment extends Fragment {
 
 	/** Dialog values */
 	private AlertDialog dialogQuality, dialogError;
-	private ListView lv_quality;
-	private ArrayAdapter mAdapter;
 
 	public StepOneFragment() {}
 
-	public static StepOneFragment newInstance() {
+	public static StepOneFragment newInstance(String url) {
 		StepOneFragment fragment = new StepOneFragment();
+		Bundle data = new Bundle();
+		data.putString("url", url);
+		fragment.setArguments(data);
 		return fragment;
 	}
 
@@ -82,19 +81,12 @@ public class StepOneFragment extends Fragment {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					if (et_url.getText().toString().trim().length() < 1) {
-						return true;
-					}
-					if (et_url.getText().toString().indexOf("http://") == -1) {
-						Toast.makeText(
-								mActivity.getApplicationContext(),
-								getString(R.string.hint_enter_url_error),
-								Toast.LENGTH_SHORT
-							).show();
-						return true;
-					}
-					et_url.clearFocus();
-					new GetResultTask().execute();
+					return check();
+				}
+				if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+					return !check();
 				}
 				return false;
 			}
@@ -112,7 +104,30 @@ public class StepOneFragment extends Fragment {
 			((TextView) rootView.findViewById(R.id.title_size)).getPaint().setFakeBoldText(true);
 		}
 
+		Bundle data = getArguments();
+		String url = data.getString("url");
+		if (url != null) {
+			et_url.setText(url);
+		}
+
 		return rootView;
+	}
+
+	private boolean check() {
+		if (et_url.getText().toString().trim().length() < 1) {
+			return true;
+		}
+		if (et_url.getText().toString().indexOf("http://") == -1) {
+			Toast.makeText(
+					mActivity.getApplicationContext(),
+					getString(R.string.hint_enter_url_error),
+					Toast.LENGTH_SHORT
+			).show();
+			return true;
+		}
+		et_url.clearFocus();
+		new GetResultTask().execute();
+		return false;
 	}
 
 	public VideoItem getVideoItem() {
@@ -132,6 +147,7 @@ public class StepOneFragment extends Fragment {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						data.selectedSource = which;
+						setTextViewVideoSize();
 					}
 				})
 				.create();
@@ -161,8 +177,8 @@ public class StepOneFragment extends Fragment {
 		tv_size.setText(
 				String.format(
 						getString(R.string.content_size),
-						data.srcs.get(mActivity.quality).getVideoUrl(0).size,
-						data.srcs.get(mActivity.quality).getVideoUrl(0).time
+						data.srcs.get(data.selectedSource).getVideoUrl(0).size,
+						data.srcs.get(data.selectedSource).getVideoUrl(0).time
 				)
 		);
 	}

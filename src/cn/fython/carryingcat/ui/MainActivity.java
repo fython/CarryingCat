@@ -61,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
 		setUpActionBar();
 
+
 		/** bind TabView & ViewPager **/
 		mTabView = getPagerSlidingTabStrip();
 		mPager = (ViewPager) findViewById(R.id.pager);
@@ -93,6 +94,15 @@ public class MainActivity extends ActionBarActivity {
 			}
 
 		});
+
+		/** Get newTask intent **/
+		Bundle data = getIntent().getExtras();
+		if (!data.isEmpty()){
+			String taskJson = data.getString("task");
+			if (taskJson != null) {
+				addTaskToManager(taskJson);
+			}
+		}
 	}
 
 	private void setUpActionBar() {
@@ -122,41 +132,45 @@ public class MainActivity extends ActionBarActivity {
 		switch (requestCode) {
 			case REQUEST_ADD_TASK:
 				String jsonStr = data.getStringExtra("data");
-				VideoItem vi;
-				try {
-					vi = new VideoItem(new JSONObject(jsonStr));
-				} catch (JSONException e) {
-					e.printStackTrace();
-					return;
-				}
-
-				/** Build New Task **/
-				Task newTask = new Task.Builder().setDataFromVideoItem(vi).build();
-				Log.i(TAG, newTask.toJSONObject().toString());
-				if (mPager.getCurrentItem() != 1) {
-					mPager.setCurrentItem(1, true);
-				}
-
-				Log.i(TAG, newTask.toJSONObject().toString());
-
-				if (fm == null) {
-					fm = new FileManager(getApplicationContext());
-				}
-				try {
-					fm.makeDir(Environment.getExternalStorageDirectory() + newTask.downloadPath);
-					fm.saveFile(
-							Environment.getExternalStorageDirectory() + newTask.downloadPath + "/task.json",
-							newTask.toJSONObject().toString()
-					);
-					fm.saveFile(
-							Environment.getExternalStorageDirectory() + newTask.downloadPath + "/data.json",
-							vi.toJSONObject().toString()
-					);
-					getDownloadManagerFragment().receiveNewTask(newTask);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				addTaskToManager(jsonStr);
 				break;
+		}
+	}
+
+	private void addTaskToManager(String jsonStr) {
+		VideoItem vi;
+		try {
+			vi = new VideoItem(new JSONObject(jsonStr));
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		/** Build New Task **/
+		Task newTask = new Task.Builder().setDataFromVideoItem(vi).build();
+		Log.i(TAG, newTask.toJSONObject().toString());
+		if (mPager.getCurrentItem() != 1) {
+			mPager.setCurrentItem(1, true);
+		}
+
+		Log.i(TAG, newTask.toJSONObject().toString());
+
+		if (fm == null) {
+			fm = new FileManager(getApplicationContext());
+		}
+		try {
+			fm.makeDir(Environment.getExternalStorageDirectory() + newTask.downloadPath);
+			fm.saveFile(
+					Environment.getExternalStorageDirectory() + newTask.downloadPath + "/task.json",
+					newTask.toJSONObject().toString()
+			);
+			fm.saveFile(
+					Environment.getExternalStorageDirectory() + newTask.downloadPath + "/data.json",
+					vi.toJSONObject().toString()
+			);
+			getDownloadManagerFragment().receiveNewTask(newTask);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
