@@ -1,6 +1,8 @@
 package cn.fython.carryingcat.ui.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -16,8 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -25,7 +25,6 @@ import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.support.api.FlvxzTools;
 import cn.fython.carryingcat.ui.task.AddActivity;
-import me.drakeet.materialdialog.MaterialDialog;
 import oppa.paperstyle.PaperButton;
 
 public class StepOneFragment extends Fragment {
@@ -40,7 +39,7 @@ public class StepOneFragment extends Fragment {
 	private String[] qualityName;
 
 	/** Dialog values */
-	private MaterialDialog dialogQuality, dialogError;
+	private AlertDialog dialogQuality, dialogError;
 	private ListView lv_quality;
 	private ArrayAdapter mAdapter;
 
@@ -121,63 +120,40 @@ public class StepOneFragment extends Fragment {
 	}
 
 	public void showQualityChooseDialog(String[] quality) {
-		if (dialogQuality == null) {
-			dialogQuality = new MaterialDialog(mActivity);
-			View v = View.inflate(
-					new ContextThemeWrapper(
-							mActivity.getApplicationContext(),
-							R.style.Theme_AppCompat_Light_Dialog),
-					R.layout.dialog_quality_choose,
-					null
-			);
+		dialogQuality = new AlertDialog.Builder(mActivity)
+				.setTitle(getString(R.string.quality_choose))
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialogQuality.dismiss();
+					}
+				})
+				.setSingleChoiceItems(qualityName, data.selectedSource, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						data.selectedSource = which;
+					}
+				})
+				.create();
 
-			lv_quality = (ListView) v.findViewById(R.id.listView);
-			lv_quality.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					mActivity.quality = position;
-					btn_quality.setText(data.srcs.get(position).quality);
-					setTextViewVideoSize();
-					dialogQuality.dismiss();
-				}
-
-			});
-
-			dialogQuality.setTitle(getString(R.string.quality_choose))
-					.setNegativeButton(android.R.string.cancel, new View.OnClickListener(){
-						@Override
-						public void onClick(View v) {
-							dialogQuality.dismiss();
-						}
-					})
-					.setCanceledOnTouchOutside(true)
-					.setContentView(v);
-		}
 		if (quality == null) {
 			showErrorDialog(getString(R.string.result_hint_wrong_url));
 		}
-
-		mAdapter = new ArrayAdapter<String>(
-				getActivity().getApplicationContext(),
-				R.layout.dialog_quality_list_item,
-				quality
-		);
-		lv_quality.setAdapter(mAdapter);
 
 		dialogQuality.show();
 	}
 
 	public void showErrorDialog(String message) {
-		dialogError = new MaterialDialog(mActivity)
+		dialogError = new AlertDialog.Builder(mActivity)
 				.setTitle(R.string.result_error)
 				.setMessage(message)
-				.setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
-					public void onClick(View v) {
+					public void onClick(DialogInterface dialog, int which) {
 						dialogError.dismiss();
 					}
-				});
+				})
+				.create();
 		dialogError.show();
 	}
 

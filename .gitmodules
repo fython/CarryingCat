@@ -1,6 +1,3 @@
-[submodule "libs/MaterialDialog"]
-path = libs/MaterialDialog
-url = https://github.com/drakeet/MaterialDialog.git
 [submodule "libs/PaperStyleWidgets"]
 path = libs/PaperStyleWidgets
 url = https://github.com/aNNiMON/PaperStyleWidgets.git

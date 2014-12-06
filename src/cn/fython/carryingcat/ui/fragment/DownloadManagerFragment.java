@@ -1,7 +1,9 @@
 package cn.fython.carryingcat.ui.fragment;
 
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -24,8 +26,6 @@ import cn.fython.carryingcat.support.download.DownloadManagerHelper;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.download.DownloadManagerPro;
 import cn.fython.carryingcat.ui.MainActivity;
-import cn.fython.carryingcat.ui.SettingsActivity;
-import me.drakeet.materialdialog.MaterialDialog;
 
 public class DownloadManagerFragment extends Fragment {
 
@@ -35,7 +35,7 @@ public class DownloadManagerFragment extends Fragment {
 	private DownloadManagerHelper mHelper;
 	private DownloadHandler mHandler;
 
-	private MaterialDialog dialogDelete;
+	private AlertDialog dialogDelete;
 
 	private final static String TAG = "DownloadManagerFragment";
 
@@ -112,6 +112,7 @@ public class DownloadManagerFragment extends Fragment {
 		);
 		if (mHelper.shouldRefresh) {
 			mHelper.initDataFromProvider();
+			mHelper.initAdapter();
 			mHelper.updateProgress();
 		}
 	}
@@ -153,22 +154,22 @@ public class DownloadManagerFragment extends Fragment {
 
 	public void showDeleteDialog(final int index) {
 		if (dialogDelete == null) {
-			dialogDelete = new MaterialDialog(mActivity);
-			dialogDelete.setMessage(R.string.download_ask_for_deleting_warning)
-					.setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+			dialogDelete = new AlertDialog.Builder(mActivity)
+					.setMessage(R.string.download_ask_for_deleting_warning)
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
-						public void onClick(View v) {
+						public void onClick(DialogInterface d, int which) {
 							mHelper.deleteTask(index, true);
 							dialogDelete.dismiss();
 						}
 					})
-					.setNegativeButton(android.R.string.cancel, new View.OnClickListener() {
+					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 						@Override
-						public void onClick(View v) {
+						public void onClick(DialogInterface d, int which) {
 							dialogDelete.dismiss();
 						}
 					})
-					.setCanceledOnTouchOutside(true);
+					.create();
 		}
 		dialogDelete.setTitle(
 				String.format(

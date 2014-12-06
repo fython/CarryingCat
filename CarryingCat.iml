@@ -21,7 +21,6 @@
     <orderEntry type="library" name="android-support-v13" level="project" />
     <orderEntry type="library" name="android-support-v7-cardview" level="project" />
     <orderEntry type="library" name="libs" level="project" />
-    <orderEntry type="module" module-name="MaterialDialog" />
     <orderEntry type="module" module-name="NineOldAndroids" />
     <orderEntry type="module" module-name="PaperStyleWidgets" />
     <orderEntry type="library" name="picasso-2.4.0" level="project" />
