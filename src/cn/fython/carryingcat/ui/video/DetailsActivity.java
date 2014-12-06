@@ -1,8 +1,11 @@
 package cn.fython.carryingcat.ui.video;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
@@ -30,6 +34,8 @@ import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class DetailsActivity extends ActionBarActivity {
+
+	private static final int FLAG_REFRESH_PICTURE = 0;
 
 	private ActionBar mActionBar;
 	private ImageView iv_preview;
@@ -70,6 +76,23 @@ public class DetailsActivity extends ActionBarActivity {
 		File file = new File(item.path + "/.preview");
 		if (file.exists()) {
 			Picasso.with(getApplicationContext()).load(file).into(iv_preview);
+		} else {
+			new Thread() {
+
+				@Override
+				public void run() {
+					Bitmap refreshBitmap = FileManager.createVideoThumbnail(FileManager.findFirstVideoFile(item.path));
+					if (refreshBitmap != null) {
+						try {
+							FileManager.saveBitmap(item.path + "/.preview", refreshBitmap);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
+					}
+				}
+
+			}.start();
 		}
 
 		FloatingActionButton fab = new FloatingActionButton.Builder(this)
@@ -125,5 +148,21 @@ public class DetailsActivity extends ActionBarActivity {
 		intent.putExtra("id", id);
 		ActivityCompat.startActivity(activity, intent, options.toBundle());
 	}
+
+	private Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case FLAG_REFRESH_PICTURE:
+					File file = new File(item.path + "/.preview");
+					if (file.exists()) {
+						Picasso.with(getApplicationContext()).load(file).into(iv_preview);
+					}
+					break;
+			}
+		}
+
+	};
 
 }

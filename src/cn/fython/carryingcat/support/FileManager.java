@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,11 +90,33 @@ public class FileManager {
 		}
 	}
 
-	public static void saveFile(String name, String text) throws IOException {
-		File file = new File(name);
+	public static void saveFile(String path, String text) throws IOException {
+		File file = new File(path);
 		FileOutputStream fos = new FileOutputStream(file);
 		fos.write(text.getBytes());
 		fos.close();
+	}
+
+	public static void saveBitmap(String path, Bitmap b) throws IOException {
+		File f = new File(path);
+		f.createNewFile();
+		FileOutputStream fOut = null;
+		try {
+			fOut = new FileOutputStream(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		b.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+		try {
+			fOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			fOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String readFile(String name) throws IOException {
