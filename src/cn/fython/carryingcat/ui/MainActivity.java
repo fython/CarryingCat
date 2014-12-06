@@ -29,6 +29,7 @@ import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.CrashHandler;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.ui.fragment.LocalVideoFragment;
 import cn.fython.carryingcat.ui.task.AddActivity;
@@ -56,11 +57,13 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		CrashHandler.init(getApplicationContext());
+		CrashHandler.register();
+		
 		FileManager fm = new FileManager(getApplicationContext());
 		fm.initCarryingCatDirectory();
 
 		setUpActionBar();
-
 
 		/** bind TabView & ViewPager **/
 		mTabView = getPagerSlidingTabStrip();
