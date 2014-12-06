@@ -1,6 +1,8 @@
 package cn.fython.carryingcat.support;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.util.Log;
 
@@ -35,7 +37,7 @@ public class FileManager {
 
 	public static ArrayList<String> getPathsInPath(String path) {
 		ArrayList<String> items = new ArrayList<String>();
-		for (File file:(new File(path).listFiles())) {
+		for (File file : (new File(path).listFiles())) {
 			if (file.isDirectory()) {
 				items.add(file.getPath());
 			}
@@ -73,7 +75,7 @@ public class FileManager {
 			return;
 		}
 
-		if(file.isDirectory()){
+		if (file.isDirectory()) {
 			File[] childFiles = file.listFiles();
 			if (childFiles == null || childFiles.length == 0) {
 				file.delete();
@@ -117,14 +119,14 @@ public class FileManager {
 		}
 	}
 
-	public static void copyDirectory(File sourceLocation , File targetLocation) throws IOException {
+	public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
 		if (sourceLocation.isDirectory()) {
 			if ((!targetLocation.exists() && !targetLocation.mkdirs()) && !targetLocation.isDirectory()) {
 				throw new IOException("Cannot create dir " + targetLocation.getAbsolutePath());
 			}
 
 			String[] children = sourceLocation.list();
-			for (int i=0; i<children.length; i++) {
+			for (int i = 0; i < children.length; i++) {
 				copyDirectory(new File(sourceLocation, children[i]),
 						new File(targetLocation, children[i]));
 			}
@@ -152,13 +154,33 @@ public class FileManager {
 	public static String findFirstVideoFile(String path) {
 		File[] list = new File(path).listFiles();
 		Log.i("findFirstVideoFile", list.toString());
-		for (File file:list) {
+		for (File file : list) {
 			String filePath = file.getAbsolutePath();
 			if (filePath.contains(".flv") || filePath.contains(".mp4") || filePath.contains(".m3u8")) {
 				return filePath;
 			}
 		}
 		return null;
+	}
+
+	public static Bitmap createVideoThumbnail(String filePath) {
+		Bitmap bitmap = null;
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		try {
+			retriever.setDataSource(filePath);
+			bitmap = retriever.getFrameAtTime();
+		} catch (IllegalArgumentException e) {
+			// Assume this is a corrupt video file
+		} catch (RuntimeException e) {
+			// Assume this is a corrupt video file.
+		} finally {
+			try {
+				retriever.release();
+			} catch (RuntimeException ex) {
+				// Ignore failures while cleaning up.
+			}
+		}
+		return bitmap;
 	}
 
 }

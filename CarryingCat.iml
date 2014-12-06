@@ -24,6 +24,7 @@
     <orderEntry type="module" module-name="MaterialDialog" />
     <orderEntry type="module" module-name="NineOldAndroids" />
     <orderEntry type="module" module-name="PaperStyleWidgets" />
+    <orderEntry type="library" name="picasso-2.4.0" level="project" />
   </component>
 </module>
 

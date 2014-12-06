@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
@@ -24,7 +27,6 @@ import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItem;
-import cn.fython.carryingcat.support.cache.ImageLoader;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class DetailsActivity extends ActionBarActivity {
@@ -56,10 +58,6 @@ public class DetailsActivity extends ActionBarActivity {
 		item = provider.getVideoList().get(id);
 		ArrayList<VideoItem> temp = new ArrayList<VideoItem>();
 		temp.add(item);
-		ImageLoader loader = new ImageLoader(
-				getApplicationContext(),
-				temp
-		);
 
 		Log.i(TAG, item.toJSONObject().toString());
 
@@ -69,7 +67,10 @@ public class DetailsActivity extends ActionBarActivity {
 
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
 		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
-		loader.DisplayImage("" + 0, iv_preview, false);
+		File file = new File(item.path + "/.preview");
+		if (file.exists()) {
+			Picasso.with(getApplicationContext()).load(file).into(iv_preview);
+		}
 
 		FloatingActionButton fab = new FloatingActionButton.Builder(this)
 				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
