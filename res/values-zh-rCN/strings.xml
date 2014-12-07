@@ -63,5 +63,6 @@
 	<string name="about_email">联系邮箱</string>
 	<string name="about_blog">我的博客</string>
 	<string name="title_application">应用设置</string>
+	<string name="share_receive_title">解析该网址视频</string>
 
 </resources>

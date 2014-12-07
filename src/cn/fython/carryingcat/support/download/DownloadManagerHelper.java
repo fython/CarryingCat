@@ -86,16 +86,17 @@ public class DownloadManagerHelper {
 
 	public void deleteTask(int index, boolean deleteFile) {
 		try {
-			dm.remove(getTask(index).downloadId);
-			if (deleteFile) {
-				FileManager.deleteDir(Environment.getExternalStorageDirectory() + getTask(index).downloadPath);
-			}
+			Task removeTask = getTask(index);
+			dm.remove(removeTask.downloadId);
 			tasks.remove(index);
-			mAdapter.removeItem(index);
+			if (deleteFile) {
+				FileManager.deleteDir(Environment.getExternalStorageDirectory() + removeTask.downloadPath);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mAdapter.notifyDataSetChanged();
+		initDataFromProvider();
+		initAdapter();
 	}
 
 	public void restartAll() {
@@ -104,7 +105,7 @@ public class DownloadManagerHelper {
 				case DownloadManager.STATUS_FAILED:
 					Task task = getTask(i);
 					deleteTask(i, false);
-					restartTask(task);
+					restartTask(mContext, task);
 					break;
 				case DownloadManager.STATUS_PAUSED:
 					dmPro.resumeDownload(getTask(i).downloadId);
@@ -121,7 +122,12 @@ public class DownloadManagerHelper {
 		for (;tasks.size() != 0;) deleteTask(0, true);
 	}
 
-	public void restartTask(Task task) {
+	public void restartTask(Context mContext, Task task) {
+		if (mContext != null) {
+			init(mContext);
+			initDataFromProvider();
+			initAdapter();
+		}
 		DownloadManager.Request request;
 		request = new DownloadManager.Request(Uri.parse(task.urls.get(0)));
 		request.setDestinationInExternalPublicDir(
@@ -136,6 +142,15 @@ public class DownloadManagerHelper {
 
 		task.downloadId = dm.enqueue(request);
 		Log.i(TAG, task.toJSONObject().toString());
+		try {
+			FileManager.saveFile(
+					Environment.getExternalStorageDirectory() +
+							task.downloadPath + "/task.json",
+					task.toJSONObject().toString()
+			);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		tasks.add(task);
 		initAdapter();
 	}

@@ -99,12 +99,12 @@ public class MainActivity extends ActionBarActivity {
 		});
 
 		/** Get newTask intent **/
-		Bundle data = getIntent().getExtras();
-		if (!data.isEmpty()){
-			String taskJson = data.getString("task");
-			if (taskJson != null) {
-				addTaskToManager(taskJson);
-			}
+		if (getIntent().hasExtra("url")) {
+			String url = getIntent().getStringExtra("url");
+			Intent intent = new Intent(MainActivity.this, AddActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+			intent.putExtra("url", url);
+			startActivityForResult(intent, REQUEST_ADD_TASK);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class MainActivity extends ActionBarActivity {
 					Environment.getExternalStorageDirectory() + newTask.downloadPath + "/data.json",
 					vi.toJSONObject().toString()
 			);
-			getDownloadManagerFragment().receiveNewTask(newTask);
+			getDownloadManagerFragment().receiveNewTask(getApplicationContext(), newTask);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

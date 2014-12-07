@@ -32,7 +32,6 @@ public class AddActivity extends ActionBarActivity {
 	private static VideoItem data;
 
 	public static int quality = 0;
-	public static boolean fromShareIntent = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +42,9 @@ public class AddActivity extends ActionBarActivity {
 
 		/** Get shareIntent **/
 		Intent intent = getIntent();
-		String action = intent.getAction();
-		String type = intent.getType();
-
 		String sharedText = null;
-		if (Intent.ACTION_SEND.equals(action) && type != null) {
-			if ("text/plain".equals(type)) {
-				fromShareIntent = true;
-				sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-			}
+		if (intent.hasExtra("url")) {
+			sharedText = intent.getStringExtra("url");
 		}
 
 		/** bind fragments and adapter **/
@@ -93,19 +86,10 @@ public class AddActivity extends ActionBarActivity {
 
 	public void finishAdding() {
 		data.path = FileManager.getMyVideoDirPath() + "/" + data.srcs.get(0).title;
-		if (fromShareIntent) {
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra("task", data.toJSONObject().toString());
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			finish();
-			return;
-		} else {
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra("data", data.toJSONObject().toString());
-			setResult(MainActivity.RESULT_OK, intent);
-			finish();
-		}
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("data", data.toJSONObject().toString());
+		setResult(MainActivity.RESULT_OK, intent);
+		finish();
 	}
 
 }

@@ -3,6 +3,7 @@ package cn.fython.carryingcat.ui.fragment;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -80,7 +81,7 @@ public class DownloadManagerFragment extends Fragment {
 					case DownloadManager.STATUS_FAILED:
 						Task task = mHelper.getTask(position);
 						mHelper.deleteTask(position, false);
-						mHelper.restartTask(task);
+						mHelper.restartTask(mActivity.getApplicationContext(), task);
 						break;
 					case DownloadManager.STATUS_PENDING:
 						break;
@@ -180,10 +181,10 @@ public class DownloadManagerFragment extends Fragment {
 		dialogDelete.show();
 	}
 
-	public void receiveNewTask(Task task) {
+	public void receiveNewTask(Context mContext, Task task) {
 		Log.i(TAG, "receiverNewTask!");
 		Log.i(TAG, "Task data: " + task.toJSONObject().toString());
-		mHelper.restartTask(task);
+		mHelper.restartTask(mContext, task);
 	}
 
 	public class DownloadHandler extends Handler {

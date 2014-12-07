@@ -108,6 +108,7 @@ public class StepOneFragment extends Fragment {
 		String url = data.getString("url");
 		if (url != null) {
 			et_url.setText(url);
+			new GetResultTask().execute();
 		}
 
 		return rootView;
