@@ -29,6 +29,7 @@ import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.support.CrashHandler;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.ui.fragment.LocalVideoFragment;
 import cn.fython.carryingcat.ui.task.AddActivity;
@@ -56,6 +57,9 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		CrashHandler.init(getApplicationContext());
+		CrashHandler.register();
+		
 		FileManager fm = new FileManager(getApplicationContext());
 		fm.initCarryingCatDirectory();
 
@@ -93,6 +97,15 @@ public class MainActivity extends ActionBarActivity {
 			}
 
 		});
+
+		/** Get newTask intent **/
+		if (getIntent().hasExtra("url")) {
+			String url = getIntent().getStringExtra("url");
+			Intent intent = new Intent(MainActivity.this, AddActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+			intent.putExtra("url", url);
+			startActivityForResult(intent, REQUEST_ADD_TASK);
+		}
 	}
 
 	private void setUpActionBar() {
@@ -122,41 +135,45 @@ public class MainActivity extends ActionBarActivity {
 		switch (requestCode) {
 			case REQUEST_ADD_TASK:
 				String jsonStr = data.getStringExtra("data");
-				VideoItem vi;
-				try {
-					vi = new VideoItem(new JSONObject(jsonStr));
-				} catch (JSONException e) {
-					e.printStackTrace();
-					return;
-				}
-
-				/** Build New Task **/
-				Task newTask = new Task.Builder().setDataFromVideoItem(vi).build();
-				Log.i(TAG, newTask.toJSONObject().toString());
-				if (mPager.getCurrentItem() != 1) {
-					mPager.setCurrentItem(1, true);
-				}
-
-				Log.i(TAG, newTask.toJSONObject().toString());
-
-				if (fm == null) {
-					fm = new FileManager(getApplicationContext());
-				}
-				try {
-					fm.makeDir(Environment.getExternalStorageDirectory() + newTask.downloadPath);
-					fm.saveFile(
-							Environment.getExternalStorageDirectory() + newTask.downloadPath + "/task.json",
-							newTask.toJSONObject().toString()
-					);
-					fm.saveFile(
-							Environment.getExternalStorageDirectory() + newTask.downloadPath + "/data.json",
-							vi.toJSONObject().toString()
-					);
-					getDownloadManagerFragment().receiveNewTask(newTask);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				addTaskToManager(jsonStr);
 				break;
+		}
+	}
+
+	private void addTaskToManager(String jsonStr) {
+		VideoItem vi;
+		try {
+			vi = new VideoItem(new JSONObject(jsonStr));
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		/** Build New Task **/
+		Task newTask = new Task.Builder().setDataFromVideoItem(vi).build();
+		Log.i(TAG, newTask.toJSONObject().toString());
+		if (mPager.getCurrentItem() != 1) {
+			mPager.setCurrentItem(1, true);
+		}
+
+		Log.i(TAG, newTask.toJSONObject().toString());
+
+		if (fm == null) {
+			fm = new FileManager(getApplicationContext());
+		}
+		try {
+			fm.makeDir(Environment.getExternalStorageDirectory() + newTask.downloadPath);
+			fm.saveFile(
+					Environment.getExternalStorageDirectory() + newTask.downloadPath + "/task.json",
+					newTask.toJSONObject().toString()
+			);
+			fm.saveFile(
+					Environment.getExternalStorageDirectory() + newTask.downloadPath + "/data.json",
+					vi.toJSONObject().toString()
+			);
+			getDownloadManagerFragment().receiveNewTask(getApplicationContext(), newTask);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -169,13 +186,14 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		MenuItem itemSearch = menu.findItem(R.id.action_search);
 		MenuItemCompat.setShowAsAction(itemSearch, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 
-		return true;
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package cn.fython.carryingcat.support;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

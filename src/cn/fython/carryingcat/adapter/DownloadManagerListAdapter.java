@@ -74,7 +74,11 @@ public class DownloadManagerListAdapter extends BaseAdapter {
 		}
 
 		holder.title.setText(targetTask.title);
-		holder.size.setText(DownloadManagerFragment.getSize(targetTask.bytes[0]) + "/" + DownloadManagerFragment.getSize(targetTask.bytes[1]));
+		try {
+			holder.size.setText(DownloadManagerFragment.getSize(targetTask.bytes[0]) + "/" + DownloadManagerFragment.getSize(targetTask.bytes[1]));
+		} catch (Exception e) {
+			holder.size.setText(mContext.getString(R.string.result_unavailable));
+		}
 		try {
 			holder.pb.setIndeterminate(false);
 			holder.pb.setProgress(targetTask.progress.get(0));

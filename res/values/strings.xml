@@ -68,4 +68,6 @@
 	<string name="about_blog">Blog</string>
 	<string name="about_blog_address">"http://fycafe.me"</string>
 
+	<string name="share_receive_title">Get videos by URL</string>
+
 </resources>

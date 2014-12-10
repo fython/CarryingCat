@@ -17,7 +17,6 @@ import cn.fython.carryingcat.support.VideoUrl;
 
 public class FlvxzTools {
 
-	private final static String FYCAFE_CONVERT_API_URL = "http://fycafe.me/carryingcat/convertUrlForFlvxz.php?url=";
 	private final static String FLVXZ_API_URL = "http://api.flvxz.com";
 
 	/** PLEASE USE YOUR OWN TOKEN INSTEAD OF THIS **/
@@ -34,7 +33,7 @@ public class FlvxzTools {
 				+ (useJSON ? addVarToUrl("jsonp", "purejson") : "");
 		Log.i(TAG, "url: " + url);
 
-		result = Utility.sendHttpMessage(url, "GET", null);
+		result = Utility.httpGet(url);
 
 		Log.i(TAG, "result: " + result);
 		return result;
@@ -45,12 +44,24 @@ public class FlvxzTools {
 	}
 
 	private static String convertToFlvxzUrl(String source) {
-		return Utility.sendHttpMessage(FYCAFE_CONVERT_API_URL + source, "GET", null);
+		String result = source;
+		try {
+			result.replace("://", ":##");
+		} catch (Exception e) {
+
+		}
+		result = Utility.encryptBase64(result.getBytes());
+		try {
+			result.replace("+/", "-_");
+		} catch (Exception e) {
+
+		}
+		return result;
 	}
 
 	public static VideoItem getVideoItem(String url) throws JSONException{
 		String encodedUrl = convertToFlvxzUrl(url);
-		Log.i(TAG, "Encoded by FyCafe.Me:" + encodedUrl);
+		Log.i(TAG, "Encoded result:" + encodedUrl);
 
 		String json = getFlvxzResult(encodedUrl, true);
 

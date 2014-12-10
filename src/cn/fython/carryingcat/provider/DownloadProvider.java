@@ -1,6 +1,7 @@
 package cn.fython.carryingcat.provider;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,7 @@ public class DownloadProvider{
 		ArrayList<String> dirs = fm.getPathsInPath(FileManager.getDownloadDirPath(true));
 		for (String dir:dirs) {
 			try {
+				Log.d(getProviderName(), "Checking:" + dir);
 				Task v = new Task(new JSONObject(fm.readFile(dir + "/task.json")));
 				items.add(v);
 			} catch (IOException e) {

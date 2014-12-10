@@ -1,8 +1,11 @@
 package cn.fython.carryingcat.ui.video;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -17,6 +20,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
@@ -24,10 +35,12 @@ import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItem;
-import cn.fython.carryingcat.support.cache.ImageLoader;
+import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class DetailsActivity extends ActionBarActivity {
+
+	private static final int FLAG_REFRESH_PICTURE = 0;
 
 	private ActionBar mActionBar;
 	private ImageView iv_preview;
@@ -56,10 +69,6 @@ public class DetailsActivity extends ActionBarActivity {
 		item = provider.getVideoList().get(id);
 		ArrayList<VideoItem> temp = new ArrayList<VideoItem>();
 		temp.add(item);
-		ImageLoader loader = new ImageLoader(
-				getApplicationContext(),
-				temp
-		);
 
 		Log.i(TAG, item.toJSONObject().toString());
 
@@ -69,7 +78,42 @@ public class DetailsActivity extends ActionBarActivity {
 
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
 		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
-		loader.DisplayImage("" + 0, iv_preview, false);
+		File file = new File(item.path + "/.preview");
+		if (file.exists()) {
+			Picasso.with(getApplicationContext()).load(file).into(iv_preview);
+		} else {
+			new Thread() {
+
+				@Override
+				public void run() {
+					Bitmap refreshBitmap = FileManager.createVideoThumbnail(FileManager.findFirstVideoFile(item.path));
+					if (refreshBitmap != null) {
+						try {
+							FileManager.saveBitmap(item.path + "/.preview", refreshBitmap);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
+					}
+				}
+
+			}.start();
+		}
+
+		if (item.srcs.get(item.selectedSource).getVideoUrl(0).size.contains("0B")) {
+			try {
+				String videoPath = FileManager.findFirstVideoFile(item.path);
+				File vf = new File(videoPath);
+				VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
+				vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
+						String.valueOf(DownloadManagerFragment.getSize(vf.length()));
+				FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		FloatingActionButton fab = new FloatingActionButton.Builder(this)
 				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
@@ -107,7 +151,7 @@ public class DetailsActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			finish();
+			super.onBackPressed();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -124,5 +168,21 @@ public class DetailsActivity extends ActionBarActivity {
 		intent.putExtra("id", id);
 		ActivityCompat.startActivity(activity, intent, options.toBundle());
 	}
+
+	private Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case FLAG_REFRESH_PICTURE:
+					File file = new File(item.path + "/.preview");
+					if (file.exists()) {
+						Picasso.with(getApplicationContext()).load(file).into(iv_preview);
+					}
+					break;
+			}
+		}
+
+	};
 
 }

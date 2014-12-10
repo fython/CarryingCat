@@ -24,8 +24,7 @@ public class JSONHelper {
 		try {
 			result = obj.getInt(name);
 		} catch (JSONException e) {
-			e.printStackTrace();
-			Log.e(TAG, "Error while reading \"" + name + "\" int.");
+			// Log.e(TAG, "Error while reading \"" + name + "\" int.");
 		}
 		return result;
 	}
@@ -35,8 +34,7 @@ public class JSONHelper {
 		try {
 			result = obj.getString(name);
 		} catch (JSONException e) {
-			e.printStackTrace();
-			Log.e(TAG, "Error while reading \"" + name + "\" string.");
+			// Log.e(TAG, "Error while reading \"" + name + "\" string.");
 		}
 		return result;
 	}

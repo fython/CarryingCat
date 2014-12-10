@@ -40,8 +40,15 @@ public class AddActivity extends ActionBarActivity {
 
 		mPager = (ViewPager) findViewById(R.id.pager);
 
+		/** Get shareIntent **/
+		Intent intent = getIntent();
+		String sharedText = null;
+		if (intent.hasExtra("url")) {
+			sharedText = intent.getStringExtra("url");
+		}
+
 		/** bind fragments and adapter **/
-		fragment0 = StepOneFragment.newInstance();
+		fragment0 = StepOneFragment.newInstance(sharedText);
 		fragment1 = StepTwoFragment.newInstance();
 
 		mAdapter = new AddStepPagerAdapter(getFragmentManager(), new Fragment[] {fragment0, fragment1});
@@ -81,7 +88,6 @@ public class AddActivity extends ActionBarActivity {
 		data.path = FileManager.getMyVideoDirPath() + "/" + data.srcs.get(0).title;
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("data", data.toJSONObject().toString());
-		Log.i("", data.toJSONObject().toString());
 		setResult(MainActivity.RESULT_OK, intent);
 		finish();
 	}

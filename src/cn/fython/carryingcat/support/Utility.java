@@ -3,9 +3,16 @@ package cn.fython.carryingcat.support;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
 
@@ -25,6 +34,23 @@ public class Utility {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	public static String httpGet(String strUrl) {
+		while (strUrl.contains("\n")) strUrl = strUrl.replace("\n", "");
+		HttpGet get = new HttpGet(Uri.parse(strUrl).toString());
+		try {
+			HttpResponse resp = new DefaultHttpClient().execute(get);
+			if (resp.getStatusLine().getStatusCode() == 200) {
+				return EntityUtils.toString(resp.getEntity());
+			} else {
+				Log.e("HttpGet", "Status Code " + resp.getStatusLine().getStatusCode());
+				return null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -95,25 +121,6 @@ public class Utility {
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	public static int dpToPx(float dp, Resources resources){
-		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
-		return (int) px;
-	}
-
-	public static int getRelativeTop(View myView) {
-		if(myView.getId() == android.R.id.content)
-			return myView.getTop();
-		else
-			return myView.getTop() + getRelativeTop((View) myView.getParent());
-	}
-
-	public static int getRelativeLeft(View myView) {
-		if(myView.getId() == android.R.id.content)
-			return myView.getLeft();
-		else
-			return myView.getLeft() + getRelativeLeft((View) myView.getParent());
 	}
 
 	public static byte[] decryptBase64(String key) {
