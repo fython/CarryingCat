@@ -1,6 +1,7 @@
 package cn.fython.carryingcat.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -79,20 +80,19 @@ public class MainActivity extends ActionBarActivity {
 
 		/** bind ActionButton **/
 		mActionBtn = new FloatingActionButton.Builder(this)
-				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
 				.withButtonColor(getResources().getColor(R.color.blue_500))
 				.withDrawable(getResources().getDrawable(R.drawable.ic_add_white_36dp))
 				.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
 				.withMargins(0, 0,
-						getResources().getDimensionPixelSize(R.dimen.action_button_margin),
-						getResources().getDimensionPixelSize(R.dimen.action_button_margin)
+						6,
+						6
 				).create();
 		mActionBtn.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, AddActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivityForResult(intent, REQUEST_ADD_TASK);
 			}
 
@@ -102,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
 		if (getIntent().hasExtra("url")) {
 			String url = getIntent().getStringExtra("url");
 			Intent intent = new Intent(MainActivity.this, AddActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.putExtra("url", url);
 			startActivityForResult(intent, REQUEST_ADD_TASK);
 		}
@@ -116,6 +116,7 @@ public class MainActivity extends ActionBarActivity {
 		if (Utility.isLandscape(this)) {
 			mActionBar.setCustomView(R.layout.actionbar_custom_land);
 			mActionBar.setDisplayShowCustomEnabled(true);
+			mActionBar.setDisplayShowTitleEnabled(false);
 		}
 	}
 

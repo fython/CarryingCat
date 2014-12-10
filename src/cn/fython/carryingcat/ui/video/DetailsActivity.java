@@ -35,6 +35,7 @@ import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.VideoItem;
+import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
@@ -78,6 +79,7 @@ public class DetailsActivity extends ActionBarActivity {
 
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
 		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
+		// 尝试读取缩略图 当无法读取时自动生成
 		File file = new File(item.path + "/.preview");
 		if (file.exists()) {
 			Picasso.with(getApplicationContext()).load(file).into(iv_preview);
@@ -93,36 +95,41 @@ public class DetailsActivity extends ActionBarActivity {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
+						// 刷新视频缩略图
 						mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
+						MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
 					}
 				}
 
 			}.start();
 		}
 
-		if (item.srcs.get(item.selectedSource).getVideoUrl(0).size.contains("0B")) {
-			try {
-				String videoPath = FileManager.findFirstVideoFile(item.path);
-				File vf = new File(videoPath);
-				VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
-				vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
-						String.valueOf(DownloadManagerFragment.getSize(vf.length()));
-				FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+		// 重新生成大小
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					String videoPath = FileManager.findFirstVideoFile(item.path);
+					File vf = new File(videoPath);
+					VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
+					vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
+							String.valueOf(DownloadManagerFragment.getSize(vf.length()));
+					FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		}
+		}.start();
 
 		FloatingActionButton fab = new FloatingActionButton.Builder(this)
-				.withButtonSize(getResources().getDimensionPixelSize(R.dimen.action_button_size))
 				.withButtonColor(getResources().getColor(R.color.pink_500))
 				.withDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_grey300_24dp))
 				.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
 				.withMargins(0, 0,
-						getResources().getDimensionPixelSize(R.dimen.action_button_margin),
-						getResources().getDimensionPixelSize(R.dimen.action_button_margin)
+						6,
+						6
 				).create();
 		fab.setOnClickListener(new View.OnClickListener() {
 
