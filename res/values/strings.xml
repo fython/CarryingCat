@@ -10,6 +10,8 @@
 		<item>Downloading</item>
 	</string-array>
 
+	<string name="operation_delete">Delete video</string>
+
 	<string name="button_next">NEXT</string>
 	<string name="button_unable">UNABLE TO CLICK</string>
 	<string name="button_finish">FINISH</string>

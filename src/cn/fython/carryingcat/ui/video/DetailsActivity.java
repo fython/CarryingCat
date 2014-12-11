@@ -17,7 +17,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
+import cn.fython.carryingcat.adapter.OperationListAdapter;
 import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
@@ -39,12 +42,16 @@ import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.view.FloatingActionButton;
 
+import static cn.fython.carryingcat.adapter.OperationListAdapter.*;
+
 public class DetailsActivity extends ActionBarActivity {
 
 	private static final int FLAG_REFRESH_PICTURE = 0;
 
 	private ActionBar mActionBar;
 	private ImageView iv_preview;
+	private ListView lv_opeartion;
+	private OperationListAdapter mAdapter;
 
 	private VideoItemProvider provider;
 	private VideoItem item;
@@ -143,6 +150,35 @@ public class DetailsActivity extends ActionBarActivity {
 
 		});
 
+		bindOpeartionList();
+	}
+
+	private void bindOpeartionList() {
+		lv_opeartion = (ListView) findViewById(R.id.listView);
+
+		mAdapter = new OperationListAdapter(getApplicationContext(), new ArrayList<OperationListAdapter.OperationItem>(), android.R.color.white);
+		mAdapter.addItem(
+				new OperationListAdapter.OperationItem(
+						getResources().getDrawable(R.drawable.ic_delete_white_24dp),
+						getString(R.string.operation_delete),
+						"delete"
+				)
+		);
+
+		lv_opeartion.setAdapter(mAdapter);
+
+		lv_opeartion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+				String key = mAdapter.getItem(i).key;
+				if (key == "delete") {
+					// TODO 删除操作
+					return;
+				}
+			}
+
+		});
 	}
 
 	private void setUpActionBar() {

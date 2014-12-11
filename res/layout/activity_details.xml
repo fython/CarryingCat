@@ -5,7 +5,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context="cn.fython.carryingcat.ui.video.DetailsActivity">
+              tools:context="cn.fython.carryingcat.ui.video.DetailsActivity"
+              android:background="?attr/colorPrimary">
 
 	<RelativeLayout
 		android:layout_width="match_parent"

@@ -188,6 +188,15 @@ public class FloatingActionButton extends View implements Animator.AnimatorListe
             return this;
         }
 
+	    public Builder withMarginsPixels(int left, int top, int right, int bottom) {
+		    params.setMargins(
+				    left,
+				    top,
+				    right,
+				    bottom);
+		    return this;
+	    }
+
         /**
          * Sets the FAB drawable
          */
@@ -212,6 +221,11 @@ public class FloatingActionButton extends View implements Animator.AnimatorListe
             params = new FrameLayout.LayoutParams(size, size);
             return this;
         }
+
+	    public Builder withButtonSizePixels(int size) {
+		    params = new FrameLayout.LayoutParams(size, size);
+		    return this;
+	    }
 
         public Builder setOnAnimationFinishedListener(OnAnimationFinishedListener listener) {
             this.listener = listener;
