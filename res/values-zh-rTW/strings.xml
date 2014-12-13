@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">搬喵</string>
+    <string name="action_settings">設定</string>
+	<string name="action_search">搜尋</string>
+
+	<string-array name="home_tabs">
+		<item>我的視頻</item>
+		<item>下載任務</item>
+	</string-array>
+
+	<string name="operation_delete">刪除視頻</string>
+	<string name="operation_delete_successful">刪除成功。</string>
+	<string name="operation_share">分享給朋友</string>
+
+	<string name="donate_content">"如果這個應用程式對你有幫助並且你樂意支援我們，你可以通過阿里巴巴支付寶向我們捐助一筆小費。\n你可以掃描以上二維碼，或通過這個電郵地址轉賬：316643843\@qq.com\n（Paypal帳戶：fython@163.com ,不推薦）"</string>
+
+	<string name="button_next">下一步</string>
+	<string name="button_unable">無法完成添加</string>
+	<string name="button_finish">完成</string>
+
+	<string name="button_start_all">全部開始</string>
+	<string name="button_pause_all">全部暫停</string>
+	<string name="button_delete_all">清除隊列</string>
+
+	<string name="activity_title_add_task">添加任務</string>
+
+	<string name="title_address">視頻原地址</string>
+	<string name="title_url">網頁地址</string>
+	<string name="title_bilibili_no">嗶哩嗶哩視頻號</string>
+	<string name="title_url_title">視頻標題</string>
+	<string name="title_quality">視頻清晰度</string>
+	<string name="title_size">視頻大小</string>
+	<string name="content_size">佔用體積：%1$s (時長：%2$s)</string>
+
+	<string name="result_hint_wrong_url">你還沒輸入正確的網址（如果已經輸入請在地址欄輸入狀態下按回車鍵）</string>
+	<string name="result_unavailable">不可用</string>
+	<string name="result_available">下載可用</string>
+	<string name="result_error">錯誤</string>
+
+	<string name="hint_enter_url_error">你還沒輸入正確的網址（如果已經輸入請在地址欄輸入狀態下按回車鍵），請再檢查。</string>
+
+	<string name="hint_finish">你的下載已就緒！</string>
+	<string name="hint_unsupported_section_download">(我們暫時不支持分段下載，請勿選擇分段清晰度。)</string>
+
+	<string-array name="spinner_address_type">
+		<item>@string/title_url</item>
+		<item>@string/title_bilibili_no</item>
+	</string-array>
+
+	<string name="quality_choose">選擇清晰度</string>
+
+	<string name="download_noti_title">正在下載 %s....</string>
+	<string name="download_ask_for_deleting">確認刪除 %s?</string>
+	<string name="download_ask_for_deleting_warning">警告：此行為無法撤銷。</string>
+	<string name="status_downloading">下載中</string>
+	<string name="status_pause">已暫停</string>
+	<string name="status_failed">下載失敗</string>
+	<string name="status_succeed">下載完成</string>
+	<string name="status_pending">請稍候</string>
+
+	<string name="settings">設定</string>
+	<string name="settings_gui">介面偏好</string>
+	<string name="settings_download">下載偏好</string>
+	<string name="title_about">關於應用程式</string>
+	<string name="about_gplus">Google+</string>
+	<string name="about_sina_weibo">新浪微博</string>
+	<string name="about_email">聯繫電郵</string>
+	<string name="about_blog">我的部落格</string>
+	<string name="title_application">應用偏好</string>
+	<string name="share_receive_title">解析當前網址視頻</string>
+	<string name="action_donate">捐贈</string>
+	<string name="title_feature">特性</string>
+	<string name="title_force_tint">啟用 Tint色彩變換</string>
+	<string name="title_force_tint_desc">狀態欄將會變換色彩並與應用主題相搭配。</string>
+	<string name="title_force_tint_lollipop">在Android 5.0這個特性已被Material主題頂替了。</string>
+	<string name="title_force_tint_unsupported">你需要Android 4.4的作業系統以啟用這個特性，請升級你的終端。</string>
+
+</resources>

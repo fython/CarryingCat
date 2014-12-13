@@ -34,12 +34,12 @@
 	<string name="title_size">视频大小</string>
 	<string name="content_size">大小：%1$s (时长：%2$s)</string>
 
-	<string name="result_hint_wrong_url">你还没输入正确的视频网址</string>
+	<string name="result_hint_wrong_url">你还没输入正确的视频网址（如果已经输入请在地址栏输入状态下按回车键）</string>
 	<string name="result_unavailable">不可用</string>
 	<string name="result_available">下载可用</string>
 	<string name="result_error">错误</string>
 
-	<string name="hint_enter_url_error">似乎你输入的网址是错误的，请在检查一次。</string>
+	<string name="hint_enter_url_error">似乎你输入的网址是错误的（如果已经输入请在地址栏输入状态下按回车键），请再检查一次。</string>
 
 	<string name="hint_finish">你的下载已就绪！</string>
 	<string name="hint_unsupported_section_download">(我们暂时不支持分段下载，请勿选用分段下载。)</string>
