@@ -18,7 +18,7 @@ public class DownloadSettingsFragment extends PreferenceFragment {
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		addPreferencesFromResource(R.xml.pref_main);
+		addPreferencesFromResource(R.xml.pref_download);
 
 		getActivity().setTitle(R.string.settings_download);
 	}

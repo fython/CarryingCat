@@ -2,6 +2,8 @@ package cn.fython.carryingcat.ui.task;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +16,8 @@ import android.view.MenuItem;
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.AddStepPagerAdapter;
 import cn.fython.carryingcat.support.FileManager;
+import cn.fython.carryingcat.support.Settings;
+import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.StepOneFragment;
@@ -31,10 +35,20 @@ public class AddActivity extends ActionBarActivity {
 
 	private static VideoItem data;
 
+	private Settings mSets;
+
 	public static int quality = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		mSets = Settings.getInstance(getApplicationContext());
+
+		if (Build.VERSION.SDK_INT == 19) {
+			if (mSets.getBoolean(Settings.Field.KITKAT_TINT, false)) {
+				Utility.enableTint(this, new ColorDrawable(getResources().getColor(R.color.deep_purple_500)));
+			}
+		}
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
 

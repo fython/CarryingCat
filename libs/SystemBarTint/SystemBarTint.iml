@@ -3,6 +3,7 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
+        <option name="LIBRARY_PROJECT" value="true" />
         <option name="UPDATE_PROPERTY_FILES" value="true" />
       </configuration>
     </facet>
@@ -15,16 +16,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="appcompat" />
-    <orderEntry type="module" module-name="cardview" />
-    <orderEntry type="module" module-name="PagerSlidingTabStrip" />
-    <orderEntry type="library" name="android-support-v13" level="project" />
-    <orderEntry type="library" name="android-support-v7-cardview" level="project" />
-    <orderEntry type="library" name="libs" level="project" />
-    <orderEntry type="module" module-name="NineOldAndroids" />
-    <orderEntry type="module" module-name="PaperStyleWidgets" />
-    <orderEntry type="library" name="picasso-2.4.0" level="project" />
-    <orderEntry type="module" module-name="SystemBarTint" />
   </component>
 </module>
 

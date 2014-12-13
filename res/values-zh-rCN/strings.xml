@@ -64,5 +64,12 @@
 	<string name="about_blog">我的博客</string>
 	<string name="title_application">应用设置</string>
 	<string name="share_receive_title">解析该网址视频</string>
+	<string name="action_donate">捐赠</string>
+	<string name="donate_content">"如果这个应用对你有帮助而且你乐意支持我们的工作，你可以透过支付宝向我们捐助一笔小钱(嘛 其实我是想凑钱买个二手n4，当然有热心人能送个闲置的那就更好了)。\n你可以扫上面的二维码，或者通过这个地址转账：316643843\@qq.com\n（PS: 不管你捐不捐助，应用程序的功能是不会变化的。）"</string>
+	<string name="title_feature">特性</string>
+	<string name="title_force_tint">启用 Tint变换</string>
+	<string name="title_force_tint_desc">状态栏将会变色且与应用色调相搭配。</string>
+	<string name="title_force_tint_lollipop">在Android 5.0这个特性被Material主题代替了。</string>
+	<string name="title_force_tint_unsupported">你需要Android 4.4的系统启用这个特性，请升级你的机器。</string>
 
 </resources>

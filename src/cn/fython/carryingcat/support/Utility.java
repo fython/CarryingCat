@@ -1,13 +1,20 @@
 package cn.fython.carryingcat.support;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -129,6 +136,20 @@ public class Utility {
 
 	public static String encryptBase64(byte[] key) {
 		return Base64.encodeToString(key, Base64.DEFAULT);
+	}
+
+	@TargetApi(19)
+	public static void enableTint(Activity activity, Drawable drawable) {
+		if (Build.VERSION.SDK_INT < 19) return;
+
+		Window w = activity.getWindow();
+		WindowManager.LayoutParams p = w.getAttributes();
+		p.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+		w.setAttributes(p);
+
+		SystemBarTintManager m = new SystemBarTintManager(activity);
+		m.setStatusBarTintEnabled(true);
+		m.setStatusBarTintDrawable(drawable);
 	}
 
 }

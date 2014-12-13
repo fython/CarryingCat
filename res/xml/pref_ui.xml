@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory
+		android:key="feature"
+		android:title="@string/title_feature">
+
+		<SwitchPreference
+			android:key="kitkat_tint"
+			android:title="@string/title_force_tint"
+			android:contentDescription="@string/title_force_tint_desc"
+			android:defaultValue="false"/>
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

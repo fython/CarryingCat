@@ -2,7 +2,9 @@ package cn.fython.carryingcat.ui.video;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,6 +36,8 @@ import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
+import cn.fython.carryingcat.support.Settings;
+import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.view.FloatingActionButton;
@@ -45,6 +49,8 @@ public class DetailsActivity extends ActionBarActivity {
 	private ActionBar mActionBar;
 	private ImageView iv_preview;
 
+	private Settings mSets;
+
 	private VideoItemProvider provider;
 	private VideoItem item;
 
@@ -54,6 +60,14 @@ public class DetailsActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		mSets = Settings.getInstance(getApplicationContext());
+
+		if (Build.VERSION.SDK_INT == 19) {
+			if (mSets.getBoolean(Settings.Field.KITKAT_TINT, false)) {
+				Utility.enableTint(this, new ColorDrawable(getResources().getColor(R.color.deep_purple_500)));
+			}
+		}
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_details);
 

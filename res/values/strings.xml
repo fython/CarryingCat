@@ -4,11 +4,14 @@
     <string name="app_name">CarryingCat</string>
     <string name="action_settings">Settings</string>
 	<string name="action_search">Search</string>
+	<string name="action_donate">Donate us!</string>
 
 	<string-array name="home_tabs">
 		<item>My Video</item>
 		<item>Downloading</item>
 	</string-array>
+
+	<string name="donate_content">"If this application is useful for you, and you\'re willing to support us, you could donate us through Alipay.\nOur Alipay account: 316643843\@qq.com\nAlso you can use that QR Code."</string>
 
 	<string name="button_next">NEXT</string>
 	<string name="button_unable">UNABLE TO CLICK</string>
@@ -67,6 +70,11 @@
 	<string name="about_email_address">fythonx\@gmail.com</string>
 	<string name="about_blog">Blog</string>
 	<string name="about_blog_address">"http://fycafe.me"</string>
+	<string name="title_feature">Features</string>
+	<string name="title_force_tint">Enable Tint</string>
+	<string name="title_force_tint_desc">The status bar will change its color in CarryingCat.</string>
+	<string name="title_force_tint_unsupported">This feature needs Android 4.4, please upgrade your machine.</string>
+	<string name="title_force_tint_lollipop">This feature has been instead of Material Theme on Android 5.0</string>
 
 	<string name="share_receive_title">Get videos by URL</string>
 

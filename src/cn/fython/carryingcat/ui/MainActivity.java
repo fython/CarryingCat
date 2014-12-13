@@ -1,6 +1,9 @@
 package cn.fython.carryingcat.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -11,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +30,7 @@ import java.io.IOException;
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.HomePagerAdapter;
 import cn.fython.carryingcat.support.FileManager;
+import cn.fython.carryingcat.support.Settings;
 import cn.fython.carryingcat.support.Task;
 import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
@@ -48,18 +53,27 @@ public class MainActivity extends ActionBarActivity {
 
 	private static HomePagerAdapter mPagerAdapter;
 
-	FileManager fm;
+	private FileManager fm;
+	private Settings mSets;
 
 	private static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		mSets = Settings.getInstance(getApplicationContext());
+
+		if (Build.VERSION.SDK_INT == 19) {
+			if (mSets.getBoolean(Settings.Field.KITKAT_TINT, false)) {
+				Utility.enableTint(this, new ColorDrawable(getResources().getColor(R.color.deep_purple_500)));
+			}
+		}
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		CrashHandler.init(getApplicationContext());
 		CrashHandler.register();
-		
+
 		FileManager fm = new FileManager(getApplicationContext());
 		fm.initCarryingCatDirectory();
 
@@ -204,6 +218,21 @@ public class MainActivity extends ActionBarActivity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra("flag", SettingsActivity.FLAG_MAIN);
 			startActivity(intent);
+			return true;
+		} else if (id == R.id.action_donate) {
+			View v = View.inflate(
+					new ContextThemeWrapper(
+							getApplicationContext(),
+							R.style.Theme_AppCompat_Light_Dialog
+					),
+					R.layout.dialog_donate,
+					null
+			);
+			new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog)
+					.setTitle(R.string.action_donate)
+					.setView(v)
+					.setNegativeButton(android.R.string.ok, null)
+					.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

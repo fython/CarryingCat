@@ -78,15 +78,13 @@ public class DownloadManagerFragment extends Fragment {
 					case DownloadManager.STATUS_RUNNING:
 						mHelper.pauseTask(position);
 						break;
+					case DownloadManager.STATUS_PAUSED:
 					case DownloadManager.STATUS_FAILED:
 						Task task = mHelper.getTask(position);
 						mHelper.deleteTask(position, false);
 						mHelper.restartTask(mActivity.getApplicationContext(), task);
 						break;
 					case DownloadManager.STATUS_PENDING:
-						break;
-					case DownloadManager.STATUS_PAUSED:
-						mHelper.resumeTask(position);
 						break;
 				}
 			}
