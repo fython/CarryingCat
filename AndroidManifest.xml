@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.fython.carryingcat"
-    android:versionCode="1"
+    android:versionCode="1005"
     android:versionName="0.1" >
 
     <uses-sdk
@@ -56,7 +56,7 @@
 
 	    <activity
 		    android:name=".ui.video.DetailsActivity"
-            android:theme="@style/AppTheme.Light.TranslucentActionBar">
+            android:theme="@style/AppTheme.TranslucentActionBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>

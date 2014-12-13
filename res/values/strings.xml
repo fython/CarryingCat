@@ -12,6 +12,8 @@
 	</string-array>
 
 	<string name="donate_content">"If this application is useful for you, and you\'re willing to support us, you could donate us through Alipay.\nOur Alipay account: 316643843\@qq.com\nAlso you can use that QR Code."</string>
+	
+	<string name="operation_delete">Delete video</string>
 
 	<string name="button_next">NEXT</string>
 	<string name="button_unable">UNABLE TO CLICK</string>

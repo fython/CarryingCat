@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -174,16 +175,26 @@ public class FileManager {
 		}
 	}
 
-	public static String findFirstVideoFile(String path) {
-		File[] list = new File(path).listFiles();
-		Log.i("findFirstVideoFile", list.toString());
-		for (File file : list) {
-			String filePath = file.getAbsolutePath();
-			if (filePath.contains(".flv") || filePath.contains(".mp4") || filePath.contains(".m3u8")) {
-				return filePath;
+	public static String findFirstVideoFile(final String path) {
+		File[] list = new File(path).listFiles(new FileFilter() {
+
+			@Override
+			public boolean accept(File file) {
+				String fileName = file.getPath();
+				if (!file.isDirectory()) {
+					if (fileName.endsWith(".flv") || fileName.endsWith(".mp4") || fileName.endsWith(".m3u8")) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
 			}
-		}
-		return null;
+
+		});
+		Log.i("findFirstVideoFile", list.toString());
+		return list[0].getAbsolutePath();
 	}
 
 	public static Bitmap createVideoThumbnail(String filePath) {

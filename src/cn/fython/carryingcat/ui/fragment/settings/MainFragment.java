@@ -39,6 +39,7 @@ public class MainFragment extends PreferenceFragment implements Preference.OnPre
 		String version = "Unknown";
 		try {
 			version = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+			version += " (" + getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode + ")";
 		} catch (Exception e) {
 			// Keep the default value
 		}

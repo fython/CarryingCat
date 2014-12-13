@@ -15,7 +15,8 @@
 			android:id="@+id/listView"
 			android:divider="@null"
 			android:paddingBottom="5dp"
-			android:paddingTop="5dp">
+			android:paddingTop="5dp"
+			android:clipToPadding="false">
 
 		</ListView>
 

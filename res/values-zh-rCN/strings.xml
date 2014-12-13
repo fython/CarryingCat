@@ -10,6 +10,8 @@
 		<item>正在下载</item>
 	</string-array>
 
+	<string name="operation_delete">删除视频</string>
+
 	<string name="button_next">下一步</string>
 	<string name="button_unable">无法添加</string>
 	<string name="button_finish">完成</string>

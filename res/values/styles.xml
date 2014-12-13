@@ -10,6 +10,7 @@
 	    <item name="colorAccent">@color/purple_300</item>
 	    <item name="colorControlNormal">@android:color/white</item>
 	    <item name="android:windowContentOverlay">@null</item>
+	    <item name="operationListBackground">?attr/colorPrimary</item>
     </style>
 
 	<style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -17,14 +18,24 @@
 		<item name="colorPrimaryDark">@color/deep_purple_700</item>
 		<item name="colorAccent">@color/purple_300</item>
 		<item name="colorControlNormal">@android:color/white</item>
+		<item name="operationListBackground">@android:color/white</item>
 	</style>
 
-	<style name="AppTheme.Light.TranslucentActionBar" parent="@style/AppTheme.Light">
+	<style name="AppTheme.TranslucentActionBar" parent="@style/AppTheme">
 		<item name="windowActionBar">false</item>
 		<item name="android:actionBarStyle">@style/Widget.AppCompat.ActionBar.Translucent</item>
 	</style>
 
-	<style name="Widget.AppCompat.ActionBar.Translucent" parent="@style/Widget.AppCompat.Light.ActionBar">
+	<style name="AppTheme.Light.TranslucentActionBar" parent="@style/AppTheme.Light">
+		<item name="windowActionBar">false</item>
+		<item name="android:actionBarStyle">@style/Widget.AppCompat.Light.ActionBar.Translucent</item>
+	</style>
+
+	<style name="Widget.AppCompat.ActionBar.Translucent" parent="@style/Widget.AppCompat.ActionBar">
+		<item name="android:colorBackground">@android:color/transparent</item>
+	</style>
+
+	<style name="Widget.AppCompat.Light.ActionBar.Translucent" parent="@style/Widget.AppCompat.Light.ActionBar">
 		<item name="android:colorBackground">@android:color/transparent</item>
 	</style>
 
