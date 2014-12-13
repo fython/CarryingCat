@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,7 +23,7 @@ import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.video.DetailsActivity;
 
-public class LocalVideoFragment extends Fragment {
+public class LocalVideoFragment extends Fragment implements View.OnTouchListener {
 
 	private MainActivity mActivity;
 
@@ -33,6 +34,8 @@ public class LocalVideoFragment extends Fragment {
 	private ArrayList<VideoItem> items;
 
 	private VideoItemProvider[] providers;
+
+	private float mLastY = -1.0f;
 
 	public LocalVideoFragment() {}
 
@@ -53,6 +56,7 @@ public class LocalVideoFragment extends Fragment {
 
 		mAdapter = new MyVideoListAdapter(mActivity.getApplicationContext(), new ArrayList<VideoItem>());
 		mListView.setAdapter(mAdapter);
+		mListView.setOnTouchListener(this);
 
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -94,7 +98,35 @@ public class LocalVideoFragment extends Fragment {
 		if (!refreshLayout.isRefreshing()) {
 			refreshLayout.setRefreshing(true);
 		}
+		mActivity.getFloatingActionButton().showFloatingActionButton();
 		new RefreshTask().execute();
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent ev) {
+		switch (ev.getAction() & MotionEvent.ACTION_MASK) {
+			case MotionEvent.ACTION_DOWN:
+				mLastY = ev.getY();
+				break;
+			case MotionEvent.ACTION_MOVE:
+				if (mLastY == -1.0f) break;
+
+				float y = ev.getY();
+
+				if (y < mLastY - 10f && mListView.getFirstVisiblePosition() >= 1) {
+					mActivity.getFloatingActionButton().hideFloatingActionButton();
+				} else if (y > mLastY + 10f) {
+					mActivity.getFloatingActionButton().showFloatingActionButton();
+				}
+
+				mLastY = y;
+				break;
+			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_CANCEL:
+				mLastY = -1.0f;
+				break;
+		}
+		return false;
 	}
 
 	public class RefreshTask extends AsyncTask<Void, Void, ArrayList<VideoItem>> {

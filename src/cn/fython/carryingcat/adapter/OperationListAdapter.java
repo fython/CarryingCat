@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class OperationListAdapter extends BaseAdapter {
 
 	private LayoutInflater inflater;
 
-	public OperationListAdapter(Context context, ArrayList<OperationItem> operations, int color) {
+	public OperationListAdapter(Context context, ArrayList<OperationItem> operations,@ColorRes int color) {
 		this.context = context;
 		this.opeartions = operations;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -67,7 +68,7 @@ public class OperationListAdapter extends BaseAdapter {
 		holder.icon.setImageDrawable(getItem(i).icon);
 		holder.icon.setColorFilter(color);
 		holder.title.setText(getItem(i).title);
-		holder.title.setTextColor(color);
+		holder.title.setTextColor(context.getResources().getColor(color));
 
 		return view;
 	}

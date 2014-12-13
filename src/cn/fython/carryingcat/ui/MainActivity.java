@@ -1,6 +1,7 @@
 package cn.fython.carryingcat.ui;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -44,7 +46,7 @@ import cn.fython.carryingcat.view.FloatingActionButton;
 public class MainActivity extends ActionBarActivity {
 
 	public static final int REQUEST_ADD_TASK = 10001;
-	public static final int HANDLER_REFRESH_MY_VIDEO = 0;
+	public static final int HANDLER_REFRESH_MY_VIDEO = 0, HANDLER_DELETE_SUCCESSFUL = 1;
 
 	private ActionBar mActionBar;
 
@@ -57,11 +59,14 @@ public class MainActivity extends ActionBarActivity {
 	private FileManager fm;
 	private Settings mSets;
 
+	private static Context mContext;
+
 	private static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		mSets = Settings.getInstance(getApplicationContext());
+		mContext = getApplicationContext();
+		mSets = Settings.getInstance(mContext);
 
 		if (Build.VERSION.SDK_INT == 19) {
 			if (mSets.getBoolean(Settings.Field.KITKAT_TINT, false)) {
@@ -72,10 +77,10 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		CrashHandler.init(getApplicationContext());
+		CrashHandler.init(mContext);
 		CrashHandler.register();
 
-		FileManager fm = new FileManager(getApplicationContext());
+		FileManager fm = new FileManager(mContext);
 		fm.initCarryingCatDirectory();
 
 		setUpActionBar();
@@ -101,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
 						6,
 						6
 				).create();
-		mActionBtn.setOnClickListener(new View.OnClickListener() {
+		getFloatingActionButton().setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -192,6 +197,10 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
+	public FloatingActionButton getFloatingActionButton() {
+		return mActionBtn;
+	}
+
 	public static LocalVideoFragment getLocalVideoFragment() {
 		return (LocalVideoFragment) mPagerAdapter.getItem(0);
 	}
@@ -246,6 +255,10 @@ public class MainActivity extends ActionBarActivity {
 			switch (msg.what) {
 				case HANDLER_REFRESH_MY_VIDEO:
 					getLocalVideoFragment().refreshList();
+					break;
+				case HANDLER_DELETE_SUCCESSFUL:
+					Toast.makeText(mContext, R.string.operation_delete_successful, Toast.LENGTH_SHORT)
+							.show();
 					break;
 				default:
 					Log.e(TAG, "Received a unsupported message. Msg.what=" + msg.what);

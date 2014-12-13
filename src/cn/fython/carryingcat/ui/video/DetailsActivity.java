@@ -1,8 +1,11 @@
 package cn.fython.carryingcat.ui.video;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
@@ -64,7 +68,11 @@ public class DetailsActivity extends ActionBarActivity {
 
 	private static final String TAG = "DetailsActivity";
 
+	private static final String OPERATION_DELETE = "delete", OPERATION_SHARE_INTENT = "share_intent";
+
 	public static final String EXTRA_IMAGE = "DetailActivity:image", EXTRA_TITLE = "DetailActivity:title";
+
+	private AlertDialog dialogDelete;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,96 +96,110 @@ public class DetailsActivity extends ActionBarActivity {
 			provider = new CCProvider(getApplicationContext());
 		}
 		int id = intent.getIntExtra("id", 0);
-		item = provider.getVideoList().get(id);
-		ArrayList<VideoItem> temp = new ArrayList<VideoItem>();
-		temp.add(item);
-
-		Log.i(TAG, item.toJSONObject().toString());
-
 		TextView tv_title = (TextView) findViewById(R.id.tv_title);
-		ViewCompat.setTransitionName(tv_title, EXTRA_TITLE);
-		tv_title.setText(item.srcs.get(0).title);
-
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
+		ViewCompat.setTransitionName(tv_title, EXTRA_TITLE);
 		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
-		// 尝试读取缩略图 当无法读取时自动生成
-		File file = new File(item.path + "/.preview");
-		if (file.exists()) {
-			Picasso.with(getApplicationContext()).load(file).into(iv_preview);
-		} else {
-			new Thread() {
+		try {
+			item = provider.getVideoList().get(id);
+			Log.i(TAG, item.toJSONObject().toString());
+			tv_title.setText(item.srcs.get(0).title);
 
+			// 尝试读取缩略图 当无法读取时自动生成
+			File file = new File(item.path + "/.preview");
+			if (file.exists()) {
+				Picasso.with(getApplicationContext()).load(file).into(iv_preview);
+			} else {
+				new Thread() {
+
+					@Override
+					public void run() {
+						Bitmap refreshBitmap = FileManager.createVideoThumbnail(FileManager.findFirstVideoFile(item.path));
+						if (refreshBitmap != null) {
+							try {
+								FileManager.saveBitmap(item.path + "/.preview", refreshBitmap);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							// 刷新视频缩略图
+							mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
+							MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
+						}
+					}
+
+				}.start();
+			}
+
+			// 重新生成大小
+			new Thread() {
 				@Override
 				public void run() {
-					Bitmap refreshBitmap = FileManager.createVideoThumbnail(FileManager.findFirstVideoFile(item.path));
-					if (refreshBitmap != null) {
-						try {
-							FileManager.saveBitmap(item.path + "/.preview", refreshBitmap);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						// 刷新视频缩略图
-						mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
-						MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
+					try {
+						String videoPath = FileManager.findFirstVideoFile(item.path);
+						File vf = new File(videoPath);
+						VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
+						vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
+								String.valueOf(DownloadManagerFragment.getSize(vf.length()));
+						FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
-
 			}.start();
+
+			FloatingActionButton fab = new FloatingActionButton.Builder(this)
+					.withButtonColor(getResources().getColor(R.color.pink_500))
+					.withDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_grey300_24dp))
+					.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
+					.withMargins(0, 0,
+							6,
+							6
+					).create();
+			fab.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					i.setDataAndType(Uri.parse(FileManager.findFirstVideoFile(item.path)), "video/*");
+					startActivity(i);
+				}
+
+			});
+
+			bindOperationList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tv_title.setText(R.string.result_unavailable);
+
+			// 创建不可用的 FAB
+			FloatingActionButton fab = new FloatingActionButton.Builder(this)
+					.withButtonColor(getResources().getColor(android.R.color.darker_gray))
+					.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
+					.withMargins(0, 0,
+							6,
+							6
+					).create();
+
+			lv_opeartion = (ListView) findViewById(R.id.listView);
+
+			mAdapter = new OperationListAdapter(getApplicationContext(), new ArrayList<OperationListAdapter.OperationItem>(), android.R.color.white);
+			addOperation(getString(R.string.result_unavailable), null, null);
+
+			lv_opeartion.setAdapter(mAdapter);
 		}
 
-		// 重新生成大小
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					String videoPath = FileManager.findFirstVideoFile(item.path);
-					File vf = new File(videoPath);
-					VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
-					vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
-							String.valueOf(DownloadManagerFragment.getSize(vf.length()));
-					FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
 
-		FloatingActionButton fab = new FloatingActionButton.Builder(this)
-				.withButtonColor(getResources().getColor(R.color.pink_500))
-				.withDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_grey300_24dp))
-				.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
-				.withMargins(0, 0,
-						6,
-						6
-				).create();
-		fab.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.setDataAndType(Uri.parse(FileManager.findFirstVideoFile(item.path)), "video/*");
-				startActivity(i);
-			}
-
-		});
-
-		bindOpeartionList();
 	}
 
-	private void bindOpeartionList() {
+	private void bindOperationList() {
 		lv_opeartion = (ListView) findViewById(R.id.listView);
 
 		mAdapter = new OperationListAdapter(getApplicationContext(), new ArrayList<OperationListAdapter.OperationItem>(), android.R.color.white);
-		mAdapter.addItem(
-				new OperationListAdapter.OperationItem(
-						getResources().getDrawable(R.drawable.ic_delete_white_24dp),
-						getString(R.string.operation_delete),
-						"delete"
-				)
-		);
+		addOperation(getString(R.string.operation_delete), OPERATION_DELETE, getResources().getDrawable(R.drawable.ic_delete_white_24dp));
+		addOperation(getString(R.string.operation_share), OPERATION_SHARE_INTENT, getResources().getDrawable(R.drawable.ic_share_white_24dp));
 
 		lv_opeartion.setAdapter(mAdapter);
 
@@ -186,13 +208,55 @@ public class DetailsActivity extends ActionBarActivity {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 				String key = mAdapter.getItem(i).key;
-				if (key == "delete") {
-					// TODO 删除操作
+				if (key.contains(OPERATION_DELETE)) {
+					showDeleteDialog();
+					return;
+				}
+				if (key.contains(OPERATION_SHARE_INTENT)) {
+					File f = new File(FileManager.findFirstVideoFile(item.path));
+					ShareCompat.IntentBuilder.from(DetailsActivity.this)
+							.addStream(Uri.fromFile(f))
+							.setType("video/*")
+							.setText(item.srcs.get(0).title)
+							.startChooser();
 					return;
 				}
 			}
 
 		});
+	}
+
+	private void addOperation(String title, String key, Drawable icon) {
+		mAdapter.addItem(
+				icon != null ?
+						(new OperationItem(icon, title, key)) :
+						(new OperationItem(title, key))
+		);
+	}
+
+	private void showDeleteDialog() {
+		if (dialogDelete == null) {
+			dialogDelete = new AlertDialog.Builder(this)
+					.setMessage(R.string.download_ask_for_deleting_warning)
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface d, int which) {
+							FileManager.deleteDir(item.path);
+							MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_DELETE_SUCCESSFUL);
+							MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
+							finish();
+						}
+					})
+					.setNegativeButton(android.R.string.cancel, null)
+					.create();
+		}
+		dialogDelete.setTitle(
+				String.format(
+						getString(R.string.download_ask_for_deleting),
+						item.srcs.get(0).title
+				)
+		);
+		dialogDelete.show();
 	}
 
 	private void setUpActionBar() {

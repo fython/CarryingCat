@@ -5,7 +5,7 @@
               android:layout_height="wrap_content"
 			  android:paddingLeft="@dimen/activity_horizontal_margin"
 			  android:paddingRight="@dimen/activity_horizontal_margin"
-              android:gravity="center_vertical">
+              android:gravity="center_horizontal">
 
 	<ImageView
 		android:layout_width="120dp"
@@ -18,16 +18,16 @@
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="80dp"
+		android:layout_height="wrap_content"
 		android:gravity="center_vertical">
 
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/tv_title"
-			android:text="【测试】视频标题 第00话"
+			android:text="【测试】视频标题 第00话XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 			android:layout_marginTop="5dp"
-			android:maxLines="2"/>
+			android:singleLine="true"/>
 
 		<TextView
 			android:layout_width="wrap_content"

@@ -160,7 +160,7 @@ public class FloatingActionButton extends View implements Animator.AnimatorListe
 
         public Builder(Activity context) {
             scale = context.getResources().getDisplayMetrics().density;
-            size = convertToPixels(72, scale); // default size is 72dp by 72dp
+            size = convertToPixels(85, scale); // default size is 85dp by 85dp
             params = new FrameLayout.LayoutParams(size, size);
             params.gravity = gravity;
             listener = null;

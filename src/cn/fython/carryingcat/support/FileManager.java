@@ -193,7 +193,6 @@ public class FileManager {
 			}
 
 		});
-		Log.i("findFirstVideoFile", list.toString());
 		return list[0].getAbsolutePath();
 	}
 

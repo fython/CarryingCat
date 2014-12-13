@@ -170,11 +170,11 @@ public class DownloadManagerHelper {
 		task.mode = bytesAndStatus[2];
 		if (task.mode == DownloadManager.STATUS_SUCCESSFUL) {
 			MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
+		} else {
+			new SaveThread(index).start();
 		}
 		mAdapter.setItem(index, task);
 		mAdapter.notifyDataSetChanged();
-
-		new SaveThread(index).start();
 	}
 
 	private class SaveThread extends Thread {
