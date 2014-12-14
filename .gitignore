@@ -25,3 +25,6 @@ proguard/
 # IntelideaJ
 out/
 .idea/
+
+# Token files
+src/cn/fython/carryingcat/support/api/Secret.java

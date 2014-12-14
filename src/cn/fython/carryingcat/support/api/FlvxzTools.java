@@ -19,8 +19,8 @@ public class FlvxzTools {
 
 	private final static String FLVXZ_API_URL = "http://api.flvxz.com";
 
-	/** PLEASE USE YOUR OWN TOKEN INSTEAD OF THIS **/
-	private final static String FLVXZ_TOKEN = "824892182ec14c8286ce0985e861381d";
+	/** PLEASE CREATE "Secret.java" AND USE IT FOR SAVING YOUR OWN TOKEN **/
+	private final static String FLVXZ_TOKEN = Secret.FLVXZ_TOKEN;
 
 	public final static String TAG = "FlvxzTools";
 
