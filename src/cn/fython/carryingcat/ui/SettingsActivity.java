@@ -1,5 +1,6 @@
 package cn.fython.carryingcat.ui;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -70,6 +71,13 @@ public class SettingsActivity extends ActionBarActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	public static void launch(Activity activity, int settingsFlag) {
+		Intent intent = new Intent(activity, SettingsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		intent.putExtra("flag", settingsFlag);
+		activity.startActivity(intent);
 	}
 
 }

@@ -16,10 +16,9 @@
 	    android:title="@string/title_about">
 
 		<Preference android:key="application_info" android:title="@string/app_name"/>
-		<Preference android:key="gplus" android:title="@string/about_gplus" android:summary="@string/about_gplus_name"/>
 		<Preference android:key="weibo" android:title="@string/about_sina_weibo" android:summary="@string/about_weibo_user_name"/>
-		<Preference android:key="email" android:title="@string/about_email" android:summary="@string/about_email_address"/>
 		<Preference android:key="blog" android:title="@string/about_blog" android:summary="@string/about_blog_address"/>
+		<Preference android:key="github" android:title="@string/about_github" android:summary="@string/about_github_address"/>
 
 	</PreferenceCategory>
 

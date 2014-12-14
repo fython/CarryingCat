@@ -64,9 +64,7 @@
 	<string name="settings_gui">介面偏好</string>
 	<string name="settings_download">下載偏好</string>
 	<string name="title_about">關於應用程式</string>
-	<string name="about_gplus">Google+</string>
 	<string name="about_sina_weibo">新浪微博</string>
-	<string name="about_email">聯繫電郵</string>
 	<string name="about_blog">我的部落格</string>
 	<string name="title_application">應用偏好</string>
 	<string name="share_receive_title">解析當前網址視頻</string>
@@ -76,5 +74,6 @@
 	<string name="title_force_tint_desc">狀態欄將會變換色彩並與應用主題相搭配。</string>
 	<string name="title_force_tint_lollipop">在Android 5.0這個特性已被Material主題頂替了。</string>
 	<string name="title_force_tint_unsupported">你需要Android 4.4的作業系統以啟用這個特性，請升級你的終端。</string>
+	<string name="about_github">Github 項目</string>
 
 </resources>

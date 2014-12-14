@@ -224,10 +224,7 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.putExtra("flag", SettingsActivity.FLAG_MAIN);
-			startActivity(intent);
+			SettingsActivity.launch(this, SettingsActivity.FLAG_MAIN);
 			return true;
 		} else if (id == R.id.action_donate) {
 			View v = View.inflate(

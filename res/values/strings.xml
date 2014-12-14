@@ -66,14 +66,13 @@
 	<string name="settings_gui">UI</string>
 	<string name="settings_download">Download</string>
 	<string name="title_about">About</string>
-	<string name="about_gplus">Google+</string>
-	<string name="about_gplus_name">"+Fung Jichun"</string>
 	<string name="about_sina_weibo">Sina Weibo</string>
 	<string name="about_weibo_user_name">"\@某烧饼"</string>
-	<string name="about_email">Email</string>
-	<string name="about_email_address">fythonx\@gmail.com</string>
+	<string name="about_weibo_address">"http://weibo.com/fython"</string>
 	<string name="about_blog">Blog</string>
 	<string name="about_blog_address">"http://fycafe.me"</string>
+	<string name="about_github">Github Project</string>
+	<string name="about_github_address">"http://github.com/fython/CarryingCat"</string>
 	<string name="title_feature">Features</string>
 	<string name="title_force_tint">Enable Tint</string>
 	<string name="title_force_tint_desc">The status bar will change its color in CarryingCat.</string>
