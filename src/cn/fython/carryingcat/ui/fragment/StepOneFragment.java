@@ -149,6 +149,7 @@ public class StepOneFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						data.selectedSource = which;
 						setTextViewVideoSize();
+						dialog.dismiss();
 					}
 				})
 				.create();
@@ -175,6 +176,7 @@ public class StepOneFragment extends Fragment {
 	}
 
 	public void setTextViewVideoSize() {
+		btn_quality.setText(data.srcs.get(data.selectedSource).quality);
 		tv_size.setText(
 				String.format(
 						getString(R.string.content_size),
@@ -208,7 +210,6 @@ public class StepOneFragment extends Fragment {
 					arrayList.add(data.srcs.get(i).quality);
 				}
 				qualityName = arrayList.toArray(new String[arrayList.size()]);
-				mActivity.quality = 0;
 				setTextViewVideoSize();
 
 				// 通知AddActivity拉取VideoItem数据

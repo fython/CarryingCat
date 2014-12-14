@@ -37,8 +37,6 @@ public class AddActivity extends ActionBarActivity {
 
 	private Settings mSets;
 
-	public static int quality = 0;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mSets = Settings.getInstance(getApplicationContext());
