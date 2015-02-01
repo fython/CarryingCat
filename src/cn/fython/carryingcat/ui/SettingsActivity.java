@@ -34,6 +34,10 @@ public class SettingsActivity extends ActionBarActivity {
 			}
 		}
 
+		if (Build.VERSION.SDK_INT >= 21) {
+			getWindow().setNavigationBarColor(getResources().getColor(R.color.deep_purple_700));
+		}
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings_root);
 
