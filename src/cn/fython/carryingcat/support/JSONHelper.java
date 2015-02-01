@@ -39,6 +39,16 @@ public class JSONHelper {
 		return result;
 	}
 
+	public JSONHelper readJSONObject(String name) {
+		JSONObject result = null;
+		try {
+			result = obj.getJSONObject(name);
+		} catch (JSONException e) {
+			// Log.e(TAG, "Error while reading \"" + name + "\" jsonObject.");
+		}
+		return new JSONHelper(result);
+	}
+
 	public JSONArrayHelper<?> readJSONArray(String name) {
 		try {
 			return new JSONArrayHelper<Object>(obj.getJSONArray(name));

@@ -24,12 +24,16 @@ public class FileManager {
 		this.mContext = context;
 	}
 
+	public static String getSDCardRootPath() {
+		return android.os.Environment.getExternalStorageDirectory().toString();
+	}
+
 	public static String getStorageDirPath() {
-		return android.os.Environment.getExternalStorageDirectory().toString() + "/CarryingCat";
+		return getSDCardRootPath() + "/CarryingCat";
 	}
 
 	public static String getDownloadDirPath(boolean withSDRoot) {
-		return (withSDRoot ? Environment.getExternalStorageDirectory().toString() : "")
+		return (withSDRoot ? getSDCardRootPath() : "")
 				+ "/Android/data/cn.fython.carryingcat/files/download";
 	}
 

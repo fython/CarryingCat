@@ -16,5 +16,7 @@ public abstract class VideoItemProvider {
 
 	public abstract ArrayList<VideoItem> getVideoList();
 
+	public abstract VideoItem getVideoItem(int id);
+
 	public abstract String getProviderName();
 }

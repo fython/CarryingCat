@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.OperationListAdapter;
+import cn.fython.carryingcat.provider.BiliProvider;
 import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.FileManager;
@@ -92,16 +93,19 @@ public class DetailsActivity extends ActionBarActivity {
 		/** get Intent data **/
 		Intent intent = getIntent();
 		String providerType = intent.getStringExtra("provider_type");
+		int id = intent.getIntExtra("id", 0);
 		if (providerType.equals("carryingcat")) {
 			provider = new CCProvider(getApplicationContext());
 		}
-		int id = intent.getIntExtra("id", 0);
+		if (providerType.equals("Bilibili")) {
+			provider = new BiliProvider(getApplicationContext());
+		}
 		TextView tv_title = (TextView) findViewById(R.id.tv_title);
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
 		ViewCompat.setTransitionName(tv_title, EXTRA_TITLE);
 		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
 		try {
-			item = provider.getVideoList().get(id);
+			item = provider.getVideoItem(id);
 			Log.i(TAG, item.toJSONObject().toString());
 			tv_title.setText(item.srcs.get(0).title);
 
@@ -114,16 +118,20 @@ public class DetailsActivity extends ActionBarActivity {
 
 					@Override
 					public void run() {
-						Bitmap refreshBitmap = FileManager.createVideoThumbnail(FileManager.findFirstVideoFile(item.path));
-						if (refreshBitmap != null) {
-							try {
-								FileManager.saveBitmap(item.path + "/.preview", refreshBitmap);
-							} catch (IOException e) {
-								e.printStackTrace();
+						try {
+							Bitmap refreshBitmap = FileManager.createVideoThumbnail(FileManager.findFirstVideoFile(item.path));
+							if (refreshBitmap != null) {
+								try {
+									FileManager.saveBitmap(item.path + "/.preview", refreshBitmap);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								// 刷新视频缩略图
+								mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
+								MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
 							}
-							// 刷新视频缩略图
-							mHandler.sendEmptyMessage(FLAG_REFRESH_PICTURE);
-							MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
+						} catch (NullPointerException e) {
+
 						}
 					}
 
@@ -131,23 +139,24 @@ public class DetailsActivity extends ActionBarActivity {
 			}
 
 			// 重新生成大小
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						String videoPath = FileManager.findFirstVideoFile(item.path);
-						File vf = new File(videoPath);
-						VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
-						vi.srcs.get(vi.selectedSource).getVideoUrl(0).size =
-								String.valueOf(DownloadManagerFragment.getSize(vf.length()));
-						FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
-					} catch (JSONException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
+			if (provider.getProviderName() == "carryingcat") {
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							String videoPath = FileManager.findFirstVideoFile(item.path);
+							File vf = new File(videoPath);
+							VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
+							vi.srcs.get(vi.selectedSource).getVideoUrl(0).size = String.valueOf(DownloadManagerFragment.getSize(vf.length()));
+							FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
+						} catch (JSONException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			}.start();
+				}.start();
+			}
 
 			FloatingActionButton fab = new FloatingActionButton.Builder(this)
 					.withButtonColor(getResources().getColor(R.color.pink_500))
@@ -285,7 +294,7 @@ public class DetailsActivity extends ActionBarActivity {
 				ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pair0, pair1);
 		Intent intent = new Intent(activity, DetailsActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-		intent.putExtra("provider_type", "carryingcat");
+		intent.putExtra("provider_type", providerName);
 		intent.putExtra("id", id);
 		ActivityCompat.startActivity(activity, intent, options.toBundle());
 	}

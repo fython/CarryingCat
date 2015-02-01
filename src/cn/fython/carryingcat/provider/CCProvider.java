@@ -25,18 +25,41 @@ public class CCProvider extends VideoItemProvider {
 		ArrayList<VideoItem> items = new ArrayList<VideoItem>();
 
 		ArrayList<String> dirs = fm.getPathsInPath(FileManager.getMyVideoDirPath());
-		for (String dir:dirs) {
+		int id = 0;
+		for (String dir : dirs) {
 			try {
 				VideoItem v = new VideoItem(new JSONObject(fm.readFile(dir + "/data.json")));
+				v.providerName = "carryingcat";
+				v.providerId = id;
 				items.add(v);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			id++;
 		}
 
 		return items;
+	}
+
+	@Override
+	public VideoItem getVideoItem(int id){
+		VideoItem v = null;
+		try {
+			v = new VideoItem(
+					new JSONObject(
+							fm.readFile(
+									fm.getPathsInPath(FileManager.getMyVideoDirPath()).get(id) + "/data.json"
+							)
+					)
+			);
+			v.providerName = "carryingcat";
+			v.providerId = id;
+		} catch (JSONException e) {
+		} catch (IOException e) {
+		}
+		return v;
 	}
 
 	@Override

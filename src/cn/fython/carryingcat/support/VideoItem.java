@@ -12,6 +12,9 @@ public class VideoItem {
 	public String name, path, playurl, imgurl;
 	public int selectedSource = 0;
 	public ArrayList<VideoSource> srcs;
+	public String providerName = "carryingCat";
+	public int providerId = 0;
+	public boolean isDir = false;
 
 	public VideoItem() {
 		this.srcs = new ArrayList<VideoSource>();
@@ -54,6 +57,21 @@ public class VideoItem {
 		} catch (JSONException e) {
 
 		}
+		try {
+			this.isDir = jsonObject.getBoolean("isDir");
+		} catch (JSONException e) {
+
+		}
+		try {
+			this.providerName = jsonObject.getString("providerName");
+		} catch (JSONException e) {
+
+		}
+		try {
+			this.providerId = jsonObject.getInt("providerId");
+		} catch (JSONException e) {
+
+		}
 		this.srcs = FlvxzTools.getVideoSource(jsonObject.getJSONArray("sources"));
 		this.selectedSource = jsonObject.getInt("selectedSource");
 	}
@@ -67,6 +85,9 @@ public class VideoItem {
 		helper.write("path", path);
 		helper.write("sources", array.toJSONArray());
 		helper.write("selectedSource", selectedSource);
+		helper.write("providerName", providerName);
+		helper.write("providerId", providerId);
+		helper.write("isDir", isDir);
 		return helper.toJSONObject();
 	}
 

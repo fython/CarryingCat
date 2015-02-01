@@ -64,7 +64,6 @@ public class MyVideoListAdapter extends BaseAdapter {
 
 		holder.tv_title.setText(getItem(position).srcs.get(0).title);
 
-		// TODO 用本地视频的实际数据替换API获取的数据
 		holder.tv_time.setText(getItem(position).srcs.get(getItem(position).selectedSource).getVideoUrl(0).time);
 		holder.tv_other.setText(getItem(position).srcs.get(getItem(position).selectedSource).getVideoUrl(0).size);
 

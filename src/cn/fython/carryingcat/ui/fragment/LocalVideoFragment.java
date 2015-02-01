@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.adapter.MyVideoListAdapter;
+import cn.fython.carryingcat.provider.BiliProvider;
 import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
 import cn.fython.carryingcat.support.VideoItem;
@@ -63,11 +65,12 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (items != null && !mAdapter.isEmpty()) {
+					VideoItem item = mAdapter.getItem(position);
 					DetailsActivity.launch(
 							(ActionBarActivity) getActivity(),
 							new View[] {view.findViewById(R.id.iv_preview), view.findViewById(R.id.tv_title)},
-							providers[0].getProviderName(),
-							position
+							item.providerName,
+							item.providerId
 					);
 				}
 			}
@@ -88,7 +91,10 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 
 		});
 
-		providers = new VideoItemProvider[] {new CCProvider(mActivity.getApplicationContext())};
+		providers = new VideoItemProvider[] {
+				new CCProvider(mActivity.getApplicationContext()),
+				new BiliProvider(mActivity.getApplicationContext())
+		};
 		refreshList();
 
 		return rootView;
