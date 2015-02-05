@@ -28,13 +28,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -49,7 +49,6 @@ import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
-import cn.fython.carryingcat.view.FloatingActionButton;
 
 import static cn.fython.carryingcat.adapter.OperationListAdapter.*;
 
@@ -162,14 +161,7 @@ public class DetailsActivity extends ActionBarActivity {
 				}.start();
 			}
 
-			FloatingActionButton fab = new FloatingActionButton.Builder(this)
-					.withButtonColor(getResources().getColor(R.color.pink_500))
-					.withDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_grey300_24dp))
-					.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
-					.withMargins(0, 0,
-							6,
-							6
-					).create();
+			FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 			fab.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -188,13 +180,8 @@ public class DetailsActivity extends ActionBarActivity {
 			tv_title.setText(R.string.result_unavailable);
 
 			// 创建不可用的 FAB
-			FloatingActionButton fab = new FloatingActionButton.Builder(this)
-					.withButtonColor(getResources().getColor(android.R.color.darker_gray))
-					.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
-					.withMargins(0, 0,
-							6,
-							6
-					).create();
+			FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+			fab.hide();
 
 			lv_opeartion = (ListView) findViewById(R.id.listView);
 

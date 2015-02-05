@@ -47,6 +47,27 @@
 			app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+		<com.melnykov.fab.FloatingActionButton
+			android:id="@+id/fab"
+			android:layout_width="72dp"
+			android:layout_height="72dp"
+			android:layout_marginLeft="16dp"
+			android:layout_marginRight="16dp"
+			android:scaleType="center"
+			app:fab_colorNormal="@color/pink_500"
+			app:fab_colorPressed="@color/pink_300"
+			android:src="@drawable/ic_play_arrow_grey300_24dp"
+			android:layout_alignTop="@+id/frameLayout"
+			android:layout_alignParentRight="true"/>
+
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="36dp"
+			android:layout_alignBottom="@+id/iv_preview"
+			android:layout_centerHorizontal="true"
+			android:id="@+id/frameLayout">
+		</FrameLayout>
+
 	</RelativeLayout>
 
 	<ListView

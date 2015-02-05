@@ -20,11 +20,13 @@
     <orderEntry type="module" module-name="PagerSlidingTabStrip" />
     <orderEntry type="library" name="android-support-v13" level="project" />
     <orderEntry type="library" name="android-support-v7-cardview" level="project" />
-    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="android-support-v7-appcompat" level="project" />
     <orderEntry type="module" module-name="NineOldAndroids" />
     <orderEntry type="module" module-name="PaperStyleWidgets" />
     <orderEntry type="library" name="picasso-2.4.0" level="project" />
     <orderEntry type="module" module-name="SystemBarTint" />
+    <orderEntry type="module" module-name="FloatingActionButton" />
+    <orderEntry type="library" name="android-support-v7-recyclerview" level="project" />
   </component>
 </module>
 

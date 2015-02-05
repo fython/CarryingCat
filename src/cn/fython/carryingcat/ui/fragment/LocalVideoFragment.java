@@ -1,12 +1,10 @@
 package cn.fython.carryingcat.ui.fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -104,7 +102,7 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 		if (!refreshLayout.isRefreshing()) {
 			refreshLayout.setRefreshing(true);
 		}
-		mActivity.getFloatingActionButton().showFloatingActionButton();
+		mActivity.getFloatingActionButton().hide(true);
 		new RefreshTask().execute();
 	}
 
@@ -120,9 +118,9 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 				float y = ev.getY();
 
 				if (y < mLastY - 10f && mListView.getFirstVisiblePosition() >= 1) {
-					mActivity.getFloatingActionButton().hideFloatingActionButton();
+					mActivity.getFloatingActionButton().hide(true);
 				} else if (y > mLastY + 10f) {
-					mActivity.getFloatingActionButton().showFloatingActionButton();
+					mActivity.getFloatingActionButton().show(true);
 				}
 
 				mLastY = y;

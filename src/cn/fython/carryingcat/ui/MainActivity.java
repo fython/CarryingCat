@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.melnykov.fab.FloatingActionButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,6 @@ import cn.fython.carryingcat.support.CrashHandler;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 import cn.fython.carryingcat.ui.fragment.LocalVideoFragment;
 import cn.fython.carryingcat.ui.task.AddActivity;
-import cn.fython.carryingcat.view.FloatingActionButton;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -102,14 +101,7 @@ public class MainActivity extends ActionBarActivity {
 		mTabView.setViewPager(mPager);
 
 		/** bind ActionButton **/
-		mActionBtn = new FloatingActionButton.Builder(this)
-				.withButtonColor(getResources().getColor(R.color.blue_500))
-				.withDrawable(getResources().getDrawable(R.drawable.ic_add_white_36dp))
-				.withGravity(Gravity.BOTTOM|Gravity.RIGHT)
-				.withMargins(0, 0,
-						6,
-						6
-				).create();
+		mActionBtn = (FloatingActionButton) findViewById(R.id.fab);
 		getFloatingActionButton().setOnClickListener(new View.OnClickListener() {
 
 			@Override
