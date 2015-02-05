@@ -70,7 +70,7 @@
 	<string name="about_weibo_user_name">"\@某烧饼"</string>
 	<string name="about_weibo_address">"http://weibo.com/fython"</string>
 	<string name="about_blog">Blog</string>
-	<string name="about_blog_address">"http://fycafe.me"</string>
+	<string name="about_blog_address">"http://feng.moe"</string>
 	<string name="about_github">Github Project</string>
 	<string name="about_github_address">"http://github.com/fython/CarryingCat"</string>
 	<string name="title_feature">Features</string>
@@ -78,6 +78,11 @@
 	<string name="title_force_tint_desc">The status bar will change its color in CarryingCat.</string>
 	<string name="title_force_tint_unsupported">This feature needs Android 4.4, please upgrade your machine.</string>
 	<string name="title_force_tint_lollipop">This feature has been instead of Material Theme on Android 5.0</string>
+	<string name="title_bilibili">Bilibili</string>
+	<string name="title_bilibili_enabled">Enabled Bilibili Provider</string>
+	<string name="title_bilibili_enabled_desc">You could watch downloaded videos from Bilibili App.</string>
+	<string name="title_bilibili_path">Folder Path</string>
+	<string name="title_bilibili_path_unavailable">The path is unavailable. Please enter the correct path.</string>
 
 	<string name="share_receive_title">Get videos by URL</string>
 

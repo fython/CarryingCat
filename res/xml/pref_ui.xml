@@ -8,7 +8,7 @@
 		<SwitchPreference
 			android:key="kitkat_tint"
 			android:title="@string/title_force_tint"
-			android:contentDescription="@string/title_force_tint_desc"
+			android:summary="@string/title_force_tint_desc"
 			android:defaultValue="false"/>
 
 	</PreferenceCategory>

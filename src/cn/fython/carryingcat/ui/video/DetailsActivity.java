@@ -79,7 +79,7 @@ public class DetailsActivity extends ActionBarActivity {
 		mSets = Settings.getInstance(getApplicationContext());
 
 		if (Build.VERSION.SDK_INT == 19) {
-			if (mSets.getBoolean(Settings.Field.KITKAT_TINT, false)) {
+			if (mSets.isTintEnabled()) {
 				Utility.enableTint(this, new ColorDrawable(getResources().getColor(R.color.deep_purple_500)));
 			}
 		}
@@ -101,7 +101,7 @@ public class DetailsActivity extends ActionBarActivity {
 			provider = new CCProvider(getApplicationContext());
 		}
 		if (providerType.equals("Bilibili")) {
-			provider = new BiliProvider(getApplicationContext());
+			provider = new BiliProvider(getApplicationContext(), mSets.getBilibiliPath());
 		}
 		TextView tv_title = (TextView) findViewById(R.id.tv_title);
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);

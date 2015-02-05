@@ -42,7 +42,7 @@ public class GUIFragment extends PreferenceFragment implements Preference.OnPref
 			pref_tint.setEnabled(false);
 		}
 		if (sdkCode == 19) {
-			boolean b = mSets.getBoolean(Settings.Field.KITKAT_TINT, false);
+			boolean b = mSets.isTintEnabled();
 			pref_tint.setChecked(b);
 		}
 		pref_tint.setOnPreferenceChangeListener(this);
@@ -55,7 +55,7 @@ public class GUIFragment extends PreferenceFragment implements Preference.OnPref
 		boolean b = (Boolean) newValue;
 		if (preference == pref_tint) {
 			pref_tint.setChecked(b);
-			mSets.putBoolean(Settings.Field.KITKAT_TINT, b);
+			mSets.setTintEnabled(b);
 			return true;
 		}
 		return false;

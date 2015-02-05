@@ -41,9 +41,53 @@ public class Settings {
 		return mPrefs.getInt(key, defValue);
 	}
 
+	public Settings putString(String key, String value) {
+		mPrefs.edit().putString(key, value).commit();
+		return this;
+	}
+
+	public String getString(String key, String def) {
+		return mPrefs.getString(key, def);
+	}
+
+	/** 更简单明了地获取应用设置 */
+
+	public boolean isTintEnabled() {
+		return this.getBoolean(Settings.Field.KITKAT_TINT, false);
+	}
+
+	public void setTintEnabled(boolean isEnabled) {
+		this.putBoolean(Field.KITKAT_TINT, isEnabled);
+	}
+
+	public boolean isBilibiliEnabled() {
+		return this.getBoolean(Field.BILIBILI_ENABLED, true);
+	}
+
+	public void setBilibiliEnabled(boolean isEnabled) {
+		this.putBoolean(Field.BILIBILI_ENABLED, isEnabled);
+	}
+
+	public String getBilibiliPath() {
+		return this.getString(Field.BILIBILI_PATH, getBilibiliDefaultPath());
+	}
+
+	// 获取默认Bilibili客户端目录
+	public String getBilibiliDefaultPath() {
+		return FileManager.getSDCardRootPath() + "/Android/data/tv.danmaku.bili/download";
+	}
+
+	// 此处应当交由UI部分检验目录路径的合法性
+	public void setBilibiliPath(String availablePath) {
+		this.putString(Field.BILIBILI_PATH, availablePath);
+	}
+
 	public class Field {
 
 		public static final String KITKAT_TINT = "FORCE_TINT";
+
+		public static final String BILIBILI_ENABLED = "BILIBILI";
+		public static final String BILIBILI_PATH = "BILIBILI_PATH";
 
 	}
 

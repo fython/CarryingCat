@@ -23,12 +23,6 @@ public class BiliProvider extends VideoItemProvider {
 	public String biliPath;
 	public FileManager fm;
 
-	public BiliProvider(Context context) {
-		super(context);
-		fm = new FileManager(context);
-		this.biliPath = FileManager.getSDCardRootPath() + "/Android/data/tv.danmaku.bili/download";
-	}
-
 	public BiliProvider(Context context, String biliPath) {
 		super(context);
 		fm = new FileManager(context);

@@ -42,7 +42,7 @@ public class AddActivity extends ActionBarActivity {
 		mSets = Settings.getInstance(getApplicationContext());
 
 		if (Build.VERSION.SDK_INT == 19) {
-			if (mSets.getBoolean(Settings.Field.KITKAT_TINT, false)) {
+			if (mSets.isTintEnabled()) {
 				Utility.enableTint(this, new ColorDrawable(getResources().getColor(R.color.deep_purple_500)));
 			}
 		}

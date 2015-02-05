@@ -75,5 +75,10 @@
 	<string name="title_force_tint_lollipop">在Android 5.0这个特性被Material主题代替了。</string>
 	<string name="title_force_tint_unsupported">你需要Android 4.4的系统启用这个特性，请升级你的机器。</string>
 	<string name="about_github">Github 项目</string>
+	<string name="title_bilibili">哔哩哔哩</string>
+	<string name="title_bilibili_enabled">启用</string>
+	<string name="title_bilibili_enabled_desc">你将可以浏览从哔哩哔哩官方客户端下载的视频。</string>
+	<string name="title_bilibili_path">文件夹路径</string>
+	<string name="title_bilibili_path_unavailable">这个路径不可用，请输入正确的路径。</string>
 
 </resources>

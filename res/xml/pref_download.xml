@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<PreferenceCategory
+		android:key="bilibili"
+		android:title="@string/title_bilibili">
+
+		<SwitchPreference
+			android:key="bilibili_enabled"
+			android:title="@string/title_bilibili_enabled"
+			android:summary="@string/title_bilibili_enabled_desc"
+			android:defaultValue="true"/>
+
+		<EditTextPreference
+			android:key="bilibili_path"
+		    android:title="@string/title_bilibili_path"/>
+
+	</PreferenceCategory>
+
 </PreferenceScreen>

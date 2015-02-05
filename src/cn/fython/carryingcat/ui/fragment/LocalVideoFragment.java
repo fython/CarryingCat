@@ -19,6 +19,7 @@ import cn.fython.carryingcat.adapter.MyVideoListAdapter;
 import cn.fython.carryingcat.provider.BiliProvider;
 import cn.fython.carryingcat.provider.CCProvider;
 import cn.fython.carryingcat.provider.VideoItemProvider;
+import cn.fython.carryingcat.support.Settings;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.video.DetailsActivity;
@@ -37,6 +38,8 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 
 	private float mLastY = -1.0f;
 
+	private Settings mSets;
+
 	public LocalVideoFragment() {}
 
 	public static LocalVideoFragment newInstance() {
@@ -50,6 +53,7 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 		View rootView = inflater.inflate(R.layout.fragment_my_video, null);
 
 		mActivity = (MainActivity) getActivity();
+		mSets = Settings.getInstance(getActivity().getApplicationContext());
 
 		refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
 		mListView = (ListView) rootView.findViewById(R.id.listView);
@@ -89,16 +93,22 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 
 		});
 
-		providers = new VideoItemProvider[] {
-				new CCProvider(mActivity.getApplicationContext()),
-				new BiliProvider(mActivity.getApplicationContext())
-		};
 		refreshList();
 
 		return rootView;
 	}
 
 	public void refreshList() {
+		if (mSets.isBilibiliEnabled()) {
+			providers = new VideoItemProvider[] {
+					new CCProvider(mActivity.getApplicationContext()),
+					new BiliProvider(mActivity.getApplicationContext(), mSets.getBilibiliPath())
+			};
+		} else {
+			providers = new VideoItemProvider[] {
+					new CCProvider(mActivity.getApplicationContext())
+			};
+		}
 		if (!refreshLayout.isRefreshing()) {
 			refreshLayout.setRefreshing(true);
 		}
