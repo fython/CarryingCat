@@ -16,9 +16,7 @@
 			android:divider="@null"
 			android:paddingBottom="5dp"
 			android:paddingTop="5dp"
-			android:clipToPadding="false">
-
-		</ListView>
+			android:clipToPadding="false"/>
 
 	</android.support.v4.widget.SwipeRefreshLayout>
 

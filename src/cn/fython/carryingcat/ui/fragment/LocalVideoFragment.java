@@ -23,6 +23,7 @@ import cn.fython.carryingcat.support.Settings;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.ui.MainActivity;
 import cn.fython.carryingcat.ui.video.DetailsActivity;
+import cn.fython.carryingcat.ui.video.MultiItemActivity;
 
 public class LocalVideoFragment extends Fragment implements View.OnTouchListener {
 
@@ -68,17 +69,28 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (items != null && !mAdapter.isEmpty()) {
 					VideoItem item = mAdapter.getItem(position);
-					DetailsActivity.launch(
-							(ActionBarActivity) getActivity(),
-							new View[] {view.findViewById(R.id.iv_preview), view.findViewById(R.id.tv_title)},
-							item.providerName,
-							item.providerId
-					);
+
+					/** 判断VideoItem是否含多个子视频选择不同的Activity打开 */
+					if (!item.isDir) {
+						DetailsActivity.launch(
+								(ActionBarActivity) getActivity(),
+								new View[] {view.findViewById(R.id.iv_preview), view.findViewById(R.id.tv_title)},
+								item.providerName,
+								item.providerId
+						);
+					} else {
+						MultiItemActivity.launch(
+								(ActionBarActivity) getActivity(),
+								item.providerName,
+								item.providerId
+						);
+					}
 				}
 			}
 
 		});
 
+		/** 初始化下拉刷新控件 */
 		refreshLayout.setColorSchemeResources(
 				R.color.blue_500, R.color.green_500, R.color.brown_500,
 				R.color.deep_purple_500, R.color.indigo_500, R.color.orange_500,
@@ -149,7 +161,11 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 		protected ArrayList<VideoItem> doInBackground(Void... params) {
 			ArrayList<VideoItem> temp = new ArrayList<VideoItem>();
 			for (VideoItemProvider provider:providers) {
-				temp.addAll(provider.getVideoList());
+				try {
+					temp.addAll(provider.getVideoList());
+				} catch (Exception e) {
+
+				}
 			}
 			return temp;
 		}

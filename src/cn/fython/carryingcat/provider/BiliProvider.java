@@ -15,17 +15,16 @@ import cn.fython.carryingcat.support.JSONHelper;
 import cn.fython.carryingcat.support.VideoItem;
 import cn.fython.carryingcat.support.VideoSource;
 import cn.fython.carryingcat.support.VideoUrl;
-import cn.fython.carryingcat.support.download.DownloadManagerPro;
 import cn.fython.carryingcat.ui.fragment.DownloadManagerFragment;
 
 public class BiliProvider extends VideoItemProvider {
 
-	public String biliPath;
-	public FileManager fm;
+	private String biliPath;
+	public static final String TAG = "BiliProvider";
+	public static final String SUBVIDEO_PROVIDER_NAME = "Bilibili-Subvideo";
 
 	public BiliProvider(Context context, String biliPath) {
 		super(context);
-		fm = new FileManager(context);
 		this.biliPath = biliPath;
 	}
 
@@ -98,18 +97,70 @@ public class BiliProvider extends VideoItemProvider {
 		return v;
 	}
 
+	public ArrayList<VideoItem> getSubvideoList(int id) {
+		ArrayList<VideoItem> result = new ArrayList<VideoItem>();
+
+		String rootPath = getVideoItem(id).path;
+		rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
+		Log.i(TAG, "Subvideo Root Path: " + rootPath);
+
+		ArrayList<String> dirs = FileManager.getPathsInPath(rootPath);
+		int sid = id * 100;
+		for (String dir : dirs) {
+			try {
+				VideoItem v = readBilibiliEntryJson(FileManager.readFile(dir + "/entry.json"), true);
+				v.providerName = SUBVIDEO_PROVIDER_NAME;
+				v.providerId = sid;
+				result.add(v);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			sid++;
+		}
+
+		return result;
+	}
+
+	/**
+	 * SID计算方法: Provider生成序号 * 100 + Subvideo序号
+	 * 很脑瘫的方法就不要吐槽了 2333 主要还是太懒 (B站如果有超过100个P的视频我就爆炸了哈哈
+	 * */
+	public VideoItem getSubvideo(int sid) {
+		int vid = sid / 100;
+		int pid = sid % 100;
+
+		String rootPath = getVideoItem(vid).path;
+		rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
+		Log.i(TAG, "Subvideo Root Path: " + rootPath);
+
+		String dir = FileManager.getPathsInPath(rootPath).get(pid);
+
+		VideoItem v = null;
+
+		try {
+			v = readBilibiliEntryJson(FileManager.readFile(dir + "/entry.json"), true);
+			v.providerName = SUBVIDEO_PROVIDER_NAME;
+			v.providerId = sid;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return v;
+	}
+
 	@Override
 	public String getProviderName() {
 		return "Bilibili";
 	}
 
-	private VideoItem readBilibiliEntryJson(String json, boolean needSubtitle) throws JSONException {
+	private VideoItem readBilibiliEntryJson(String json, boolean useSubtitle) throws JSONException {
 		JSONHelper d = new JSONHelper(new JSONObject(json));
 		VideoItem v = new VideoItem();
-		v.name = d.readString("title");
-		if (needSubtitle) {
-			v.name += " " + d.readJSONObject("page_data").readString("part");
-		}
+		v.name = !useSubtitle ? d.readString("title") : d.readJSONObject("page_data").readString("part");
 		v.path = d.readString("storage_path");
 		if (v.path.indexOf("entry.json") != -1) {
 			v.path = v.path.substring(0, v.path.lastIndexOf("entry.json") - 1);

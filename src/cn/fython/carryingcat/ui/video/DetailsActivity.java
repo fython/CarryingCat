@@ -20,7 +20,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -103,12 +102,19 @@ public class DetailsActivity extends ActionBarActivity {
 		if (providerType.equals("Bilibili")) {
 			provider = new BiliProvider(getApplicationContext(), mSets.getBilibiliPath());
 		}
+		if (providerType.equals(BiliProvider.SUBVIDEO_PROVIDER_NAME)) {
+			provider = new BiliProvider(getApplicationContext(), mSets.getBilibiliPath());
+		}
 		TextView tv_title = (TextView) findViewById(R.id.tv_title);
 		iv_preview = (ImageView) findViewById(R.id.iv_preview);
 		ViewCompat.setTransitionName(tv_title, EXTRA_TITLE);
 		ViewCompat.setTransitionName(iv_preview, EXTRA_IMAGE);
 		try {
-			item = provider.getVideoItem(id);
+			if (providerType.equals(BiliProvider.SUBVIDEO_PROVIDER_NAME)) {
+				item = ((BiliProvider) provider).getSubvideo(id);
+			} else {
+				item = provider.getVideoItem(id);
+			}
 			Log.i(TAG, item.toJSONObject().toString());
 			tv_title.setText(item.srcs.get(0).title);
 
@@ -142,23 +148,25 @@ public class DetailsActivity extends ActionBarActivity {
 			}
 
 			// 重新生成大小
-			if (provider.getProviderName() == "carryingcat") {
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							String videoPath = FileManager.findFirstVideoFile(item.path);
-							File vf = new File(videoPath);
-							VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
-							vi.srcs.get(vi.selectedSource).getVideoUrl(0).size = String.valueOf(DownloadManagerFragment.getSize(vf.length()));
-							FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
-						} catch (JSONException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
+			if (provider != null) {
+				if (provider.getProviderName() == "carryingcat") {
+					new Thread() {
+						@Override
+						public void run() {
+							try {
+								String videoPath = FileManager.findFirstVideoFile(item.path);
+								File vf = new File(videoPath);
+								VideoItem vi = new VideoItem(new JSONObject(FileManager.readFile(item.path + "/data.json")));
+								vi.srcs.get(vi.selectedSource).getVideoUrl(0).size = String.valueOf(DownloadManagerFragment.getSize(vf.length()));
+								FileManager.saveFile(item.path + "/data.json", vi.toJSONObject().toString());
+							} catch (JSONException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
-					}
-				}.start();
+					}.start();
+				}
 			}
 
 			FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
