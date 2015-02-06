@@ -164,7 +164,7 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 				try {
 					temp.addAll(provider.getVideoList());
 				} catch (Exception e) {
-
+					e.printStackTrace();
 				}
 			}
 			return temp;

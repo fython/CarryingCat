@@ -80,5 +80,6 @@
 	<string name="title_bilibili_enabled_desc">你將可以瀏覽來自嗶哩嗶哩官方客戶端的快取視頻。</string>
 	<string name="title_bilibili_path">文件夾路徑</string>
 	<string name="title_bilibili_path_unavailable">這個路徑不可用，請輸入正確的文件夾路徑。</string>
+	<string name="multivideo_count_title">"共 %s 個視頻"</string>
 
 </resources>

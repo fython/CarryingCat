@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class VideoSource {
 
 	public String title, playurl, quality, site, imgurl;
-	private ArrayList<VideoUrl> urls;
+	public ArrayList<VideoUrl> urls;
 
 	public VideoSource(String title) {
 		this.title = title;

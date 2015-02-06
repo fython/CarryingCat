@@ -6,10 +6,12 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import cn.fython.carryingcat.R;
 import cn.fython.carryingcat.support.FileManager;
 import cn.fython.carryingcat.support.JSONHelper;
 import cn.fython.carryingcat.support.VideoItem;
@@ -41,7 +43,7 @@ public class BiliProvider extends VideoItemProvider {
 			if (p.size() == 1) {
 				// 只有1P
 				try {
-					VideoItem v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), true);
+					VideoItem v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), true, false);
 					v.providerId = id;
 					result.add(v);
 				} catch (JSONException e) {
@@ -52,7 +54,7 @@ public class BiliProvider extends VideoItemProvider {
 			} else if (p.size() > 1) {
 				// 多P
 				try {
-					VideoItem v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), false);
+					VideoItem v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), false, true);
 					v.providerId = id;
 					v.isDir = true;
 					result.add(v);
@@ -75,7 +77,7 @@ public class BiliProvider extends VideoItemProvider {
 		if (p.size() == 1) {
 			// 只有1P
 			try {
-				v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), false);
+				v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), false, false);
 				v.providerId = id;
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -85,7 +87,7 @@ public class BiliProvider extends VideoItemProvider {
 		} else if (p.size() > 1) {
 			// 多P
 			try {
-				v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), false);
+				v = readBilibiliEntryJson(FileManager.readFile(p.get(0) + "/entry.json"), false, true);
 				v.providerId = id;
 				v.isDir = true;
 			} catch (JSONException e) {
@@ -108,7 +110,7 @@ public class BiliProvider extends VideoItemProvider {
 		int sid = id * 100;
 		for (String dir : dirs) {
 			try {
-				VideoItem v = readBilibiliEntryJson(FileManager.readFile(dir + "/entry.json"), true);
+				VideoItem v = readBilibiliEntryJson(FileManager.readFile(dir + "/entry.json"), true, false);
 				v.providerName = SUBVIDEO_PROVIDER_NAME;
 				v.providerId = sid;
 				result.add(v);
@@ -140,7 +142,7 @@ public class BiliProvider extends VideoItemProvider {
 		VideoItem v = null;
 
 		try {
-			v = readBilibiliEntryJson(FileManager.readFile(dir + "/entry.json"), true);
+			v = readBilibiliEntryJson(FileManager.readFile(dir + "/entry.json"), true, false);
 			v.providerName = SUBVIDEO_PROVIDER_NAME;
 			v.providerId = sid;
 		} catch (IOException e) {
@@ -157,7 +159,7 @@ public class BiliProvider extends VideoItemProvider {
 		return "Bilibili";
 	}
 
-	private VideoItem readBilibiliEntryJson(String json, boolean useSubtitle) throws JSONException {
+	private VideoItem readBilibiliEntryJson(String json, boolean useSubtitle, boolean isDir) throws JSONException {
 		JSONHelper d = new JSONHelper(new JSONObject(json));
 		VideoItem v = new VideoItem();
 		v.name = !useSubtitle ? d.readString("title") : d.readJSONObject("page_data").readString("part");
@@ -168,10 +170,22 @@ public class BiliProvider extends VideoItemProvider {
 
 		VideoSource vs = new VideoSource(v.name);
 		VideoUrl fakeUrl = new VideoUrl();
-		fakeUrl.size = String.valueOf(DownloadManagerFragment.getSize(d.readInt("total_bytes", 0)));
-		SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-		String time = formatter.format(d.readInt("total_time_milli", 0));
-		fakeUrl.time = time;
+		if (!isDir) {
+			fakeUrl.size = String.valueOf(DownloadManagerFragment.getSize(d.readInt("total_bytes", 0)));
+			SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+			String time = formatter.format(d.readInt("total_time_milli", 0));
+			fakeUrl.time = time;
+		} else {
+			try {
+				String folderPath = v.path.substring(0, v.path.lastIndexOf("/"));
+				fakeUrl.size = String.valueOf(DownloadManagerFragment.getSize(FileManager.getFolderSize(new File(folderPath))));
+				fakeUrl.time = String.format(mContext.getString(R.string.multivideo_count_title), FileManager.getPathsInPath(folderPath).size());
+			} catch (Exception e) {
+				fakeUrl.size = "";
+				fakeUrl.time = "";
+				e.printStackTrace();
+			}
+		}
 		vs.addVideoUrl(fakeUrl);
 		v.srcs.add(vs);
 		v.providerName = "Bilibili";

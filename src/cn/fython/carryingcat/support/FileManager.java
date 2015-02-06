@@ -41,6 +41,7 @@ public class FileManager {
 		return getStorageDirPath() + "/video";
 	}
 
+	/** 获取文件夹中的文件夹列表 */
 	public static ArrayList<String> getPathsInPath(String path) {
 		ArrayList<String> items = new ArrayList<String>();
 		for (File file : (new File(path).listFiles())) {
@@ -51,6 +52,7 @@ public class FileManager {
 		return items;
 	}
 
+	/** 初始化搬喵文件夹 */
 	public void initCarryingCatDirectory() {
 		File ccRoot = new File(getStorageDirPath());
 		File ccDownload = new File(getDownloadDirPath(true));
@@ -66,6 +68,7 @@ public class FileManager {
 		}
 	}
 
+	/** 保存到App data */
 	public void saveToInternal(String fileName, String content) {
 		try {
 			saveFile(Environment.getDataDirectory() + "/data/" + mContext.getPackageName() + "/" + fileName, content);
@@ -74,6 +77,7 @@ public class FileManager {
 		}
 	}
 
+	/** 删除文件夹 */
 	public static void deleteDir(String path) {
 		File file = new File(path);
 		if (file.isFile()) {
@@ -95,6 +99,7 @@ public class FileManager {
 		}
 	}
 
+	/** 保存String为文件 */
 	public static void saveFile(String path, String text) throws IOException {
 		File file = new File(path);
 		FileOutputStream fos = new FileOutputStream(file);
@@ -102,6 +107,7 @@ public class FileManager {
 		fos.close();
 	}
 
+	/** 保存Bitmap为文件 */
 	public static void saveBitmap(String path, Bitmap b) throws IOException {
 		File f = new File(path);
 		f.createNewFile();
@@ -124,6 +130,7 @@ public class FileManager {
 		}
 	}
 
+	/** 读取文件为String */
 	public static String readFile(String name) throws IOException {
 		File file = new File(name);
 		InputStream is = new FileInputStream(file);
@@ -138,6 +145,7 @@ public class FileManager {
 		return string;
 	}
 
+	/** 创建文件夹 */
 	public void makeDir(String path) {
 		File file = new File(path);
 		try {
@@ -147,6 +155,7 @@ public class FileManager {
 		}
 	}
 
+	/** 复制文件夹 */
 	public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
 		if (sourceLocation.isDirectory()) {
 			if ((!targetLocation.exists() && !targetLocation.mkdirs()) && !targetLocation.isDirectory()) {
@@ -179,6 +188,7 @@ public class FileManager {
 		}
 	}
 
+	/** 寻找第一个视频文件 */
 	public static String findFirstVideoFile(final String path) {
 		File[] list = new File(path).listFiles(new FileFilter() {
 
@@ -200,6 +210,7 @@ public class FileManager {
 		return list[0].getAbsolutePath();
 	}
 
+	/** 创建视频预览图 */
 	public static Bitmap createVideoThumbnail(String filePath) {
 		Bitmap bitmap = null;
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -218,6 +229,23 @@ public class FileManager {
 			}
 		}
 		return bitmap;
+	}
+
+	/** 获取文件夹总大小 */
+	public static long getFolderSize(File file) throws Exception{
+		long size = 0;
+		File[] fileList = file.listFiles();
+		for (int i = 0; i < fileList.length; i++)
+		{
+			if (fileList[i].isDirectory())
+			{
+				size = size + getFolderSize(fileList[i]);
+			} else
+			{
+				size = size + fileList[i].length();
+			}
+		}
+		return size;
 	}
 
 }

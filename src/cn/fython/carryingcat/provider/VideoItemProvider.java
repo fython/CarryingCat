@@ -8,7 +8,7 @@ import cn.fython.carryingcat.support.VideoItem;
 
 public abstract class VideoItemProvider {
 
-	private Context mContext;
+	protected Context mContext;
 
 	public VideoItemProvider(Context context) {
 		this.mContext = context;

@@ -80,5 +80,6 @@
 	<string name="title_bilibili_enabled_desc">你将可以浏览从哔哩哔哩官方客户端下载的视频。</string>
 	<string name="title_bilibili_path">文件夹路径</string>
 	<string name="title_bilibili_path_unavailable">这个路径不可用，请输入正确的路径。</string>
+	<string name="multivideo_count_title">"共 %s 个视频"</string>
 
 </resources>
