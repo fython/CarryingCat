@@ -67,9 +67,13 @@ public class MyVideoListAdapter extends BaseAdapter {
 		holder.tv_time.setText(getItem(position).srcs.get(getItem(position).selectedSource).getVideoUrl(0).time);
 		holder.tv_other.setText(getItem(position).srcs.get(getItem(position).selectedSource).getVideoUrl(0).size);
 
-		File file = new File(items.get(position).path + "/.preview");
-		if (file.exists()) {
-			p.load(file).into(holder.iv_preview);
+		if (!holder.hasFilledWithImage) {
+			File file = new File(items.get(position).path + "/.preview");
+			if (file.exists()) {
+				p.load(file).into(holder.iv_preview);
+			} else {
+				holder.iv_preview.setImageResource(R.drawable.no_preview);
+			}
 		}
 
 		return convertView;
@@ -79,6 +83,8 @@ public class MyVideoListAdapter extends BaseAdapter {
 
 		public TextView tv_title, tv_other, tv_time;
 		public ImageView iv_preview;
+
+		public boolean hasFilledWithImage = false;
 
 	}
 
