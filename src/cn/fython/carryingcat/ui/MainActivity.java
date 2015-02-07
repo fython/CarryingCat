@@ -219,7 +219,12 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_add_task) {
+			Intent intent = new Intent(MainActivity.this, AddActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivityForResult(intent, REQUEST_ADD_TASK);
+			return true;
+		} else if (id == R.id.action_settings) {
 			SettingsActivity.launch(this, SettingsActivity.FLAG_MAIN);
 			return true;
 		} else if (id == R.id.action_donate) {

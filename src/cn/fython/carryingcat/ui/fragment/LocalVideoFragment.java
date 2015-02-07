@@ -124,7 +124,7 @@ public class LocalVideoFragment extends Fragment implements View.OnTouchListener
 		if (!refreshLayout.isRefreshing()) {
 			refreshLayout.setRefreshing(true);
 		}
-		mActivity.getFloatingActionButton().hide(true);
+		mActivity.getFloatingActionButton().show(true);
 		new RefreshTask().execute();
 	}
 
