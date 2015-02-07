@@ -207,7 +207,11 @@ public class FileManager {
 			}
 
 		});
-		return list[0].getAbsolutePath();
+		if (list.length > 0) {
+			return list[0].getAbsolutePath();
+		} else {
+			return null;
+		}
 	}
 
 	/** 创建视频预览图 */

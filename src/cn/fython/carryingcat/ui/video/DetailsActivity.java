@@ -140,7 +140,7 @@ public class DetailsActivity extends ActionBarActivity {
 								MainActivity.mHandler.sendEmptyMessage(MainActivity.HANDLER_REFRESH_MY_VIDEO);
 							}
 						} catch (NullPointerException e) {
-
+							e.printStackTrace();
 						}
 					}
 

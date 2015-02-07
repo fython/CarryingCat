@@ -167,6 +167,13 @@ public class BiliProvider extends VideoItemProvider {
 		if (v.path.indexOf("entry.json") != -1) {
 			v.path = v.path.substring(0, v.path.lastIndexOf("entry.json") - 1);
 		}
+		if (FileManager.findFirstVideoFile(v.path) == null) {
+			try {
+				v.path = FileManager.getPathsInPath(v.path).get(0);
+			} catch (Exception e) {
+				Log.e(TAG, "Couldn't find directory.");
+			}
+		}
 
 		VideoSource vs = new VideoSource(v.name);
 		VideoUrl fakeUrl = new VideoUrl();
