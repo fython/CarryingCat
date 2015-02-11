@@ -5,8 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
 import cn.fython.carryingcat.R;
+import cn.fython.carryingcat.support.Settings;
+import cn.fython.carryingcat.support.Utility;
 import cn.fython.carryingcat.ui.SettingsActivity;
 
 public class MainFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
@@ -22,10 +25,17 @@ public class MainFragment extends PreferenceFragment implements Preference.OnPre
 
 	}
 
+	private Settings mSets;
+
+	private MutilClickThread mThread;
+
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		addPreferencesFromResource(R.xml.pref_main);
+
+		mThread = new MutilClickThread();
+		mSets = Settings.getInstance(getActivity().getApplicationContext());
 
 		getActivity().setTitle(R.string.settings);
 
@@ -45,6 +55,7 @@ public class MainFragment extends PreferenceFragment implements Preference.OnPre
 		}
 		pref_application_info.setSummary(version);
 
+		pref_application_info.setOnPreferenceClickListener(this);
 		pref_gui.setOnPreferenceClickListener(this);
 		pref_download.setOnPreferenceClickListener(this);
 		pref_weibo.setOnPreferenceClickListener(this);
@@ -54,7 +65,15 @@ public class MainFragment extends PreferenceFragment implements Preference.OnPre
 
 	@Override
 	public boolean onPreferenceClick(Preference p) {
-		if (p == pref_gui) {
+		if (p == pref_application_info) {
+			if (!mThread.isRunning) {
+				mThread = new MutilClickThread();
+				mThread.start();
+				mThread.isRunning = true;
+			}
+			mThread.clicktimes++;
+			return true;
+		} else if (p == pref_gui) {
 			SettingsActivity.launch(getActivity(), SettingsActivity.FLAG_GUI);
 			return true;
 		} else if (p == pref_download) {
@@ -76,6 +95,44 @@ public class MainFragment extends PreferenceFragment implements Preference.OnPre
 	private void openWebsite(String url) {
 		Uri uri = Uri.parse(url);
 		startActivity(new Intent(Intent.ACTION_VIEW, uri));
+	}
+
+	private class MutilClickThread extends Thread {
+
+		public int clicktimes = 0;
+		public boolean isRunning = false;
+
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (clicktimes > 5) {
+				final int now = mSets.getInt(Settings.Field.ICON_INT, Settings.Field.ICON_NORMAL);
+				try {
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(
+									getActivity().getApplicationContext(),
+									now == 0 | now == 1 ? "8-bit icon mode enabled!!" : "8-bit icon mode disabled!!",
+									Toast.LENGTH_LONG
+							).show();
+						}
+					});
+				} catch (Exception e) {
+					// Ignore exceptions.
+				}
+				int then = now == 2 ? 0 : now + 1;
+				mSets.putInt(Settings.Field.ICON_INT, then);
+				Utility.setIcon(getActivity(), then);
+			}
+			isRunning = false;
+			clicktimes = 0;
+		}
+
 	}
 
 }

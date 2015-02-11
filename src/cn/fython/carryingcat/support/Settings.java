@@ -89,6 +89,9 @@ public class Settings {
 		public static final String BILIBILI_ENABLED = "BILIBILI";
 		public static final String BILIBILI_PATH = "BILIBILI_PATH";
 
+		public static final String ICON_INT = "ICON_INT";
+		public static final int ICON_NORMAL = 0, ICON_8BIT_SMALL = 1, ICON_8BIT_LARGE = 2;
+
 	}
 
 }

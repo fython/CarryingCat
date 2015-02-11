@@ -2,6 +2,12 @@ package cn.fython.carryingcat.support;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -31,6 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class Utility {
@@ -150,6 +157,55 @@ public class Utility {
 		SystemBarTintManager m = new SystemBarTintManager(activity);
 		m.setStatusBarTintEnabled(true);
 		m.setStatusBarTintDrawable(drawable);
+	}
+
+	public static void setIcon(Activity activity, int icon) {
+		Context ctx = activity;
+		PackageManager pm = activity.getPackageManager();
+		ActivityManager am = (ActivityManager) activity.getSystemService(Activity.ACTIVITY_SERVICE);
+
+		// Enable/disable activity-aliases
+
+		boolean a0, a1, a2;
+
+		switch (icon) {
+			case Settings.Field.ICON_8BIT_SMALL:
+				a1 = true;
+				a0 = a2 = false;
+				break;
+			case Settings.Field.ICON_8BIT_LARGE:
+				a2 = true;
+				a0 = a1 = false;
+				break;
+			case Settings.Field.ICON_NORMAL:
+			default:
+				a0 = true;
+				a2 = a1 = false;
+		}
+
+		pm.setComponentEnabledSetting(
+				new ComponentName(ctx, "cn.fython.carryingcat.ui.MainActivity-normal"),
+				a0 ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
+						PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+				PackageManager.DONT_KILL_APP
+		);
+
+		pm.setComponentEnabledSetting(
+				new ComponentName(ctx, "cn.fython.carryingcat.ui.MainActivity-8bit-small"),
+				a1 ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
+						PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+				PackageManager.DONT_KILL_APP
+		);
+
+		pm.setComponentEnabledSetting(
+				new ComponentName(ctx, "cn.fython.carryingcat.ui.MainActivity-8bit-large"),
+				a2 ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
+						PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+				PackageManager.DONT_KILL_APP
+		);
+
+
+
 	}
 
 }

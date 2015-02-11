@@ -20,11 +20,47 @@
 	        android:theme="@style/AppTheme.Main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
+	    
+	    <activity-alias
+		    android:enabled="true"
+		    android:name=".ui.MainActivity-normal"
+		    android:targetActivity=".ui.MainActivity"
+	        android:label="@string/app_name"
+	        android:icon="@drawable/ic_launcher"
+	        android:theme="@style/AppTheme.Main" >
+		    <intent-filter>
+			    <action android:name="android.intent.action.MAIN" />
+			    <category android:name="android.intent.category.LAUNCHER" />
+		    </intent-filter>
+	    </activity-alias>
+
+	    <activity-alias
+		    android:enabled="false"
+		    android:name=".ui.MainActivity-8bit-small"
+		    android:targetActivity=".ui.MainActivity"
+		    android:label="@string/app_name"
+		    android:icon="@drawable/ic_launcher_8bit_small"
+		    android:theme="@style/AppTheme.Main" >
+		    <intent-filter>
+			    <action android:name="android.intent.action.MAIN" />
+			    <category android:name="android.intent.category.LAUNCHER" />
+		    </intent-filter>
+	    </activity-alias>
+
+	    <activity-alias
+		    android:enabled="false"
+		    android:name=".ui.MainActivity-8bit-large"
+		    android:targetActivity=".ui.MainActivity"
+		    android:label="@string/app_name"
+		    android:icon="@drawable/ic_launcher_8bit_large"
+		    android:theme="@style/AppTheme.Main" >
+		    <intent-filter>
+			    <action android:name="android.intent.action.MAIN" />
+			    <category android:name="android.intent.category.LAUNCHER" />
+		    </intent-filter>
+	    </activity-alias>
 
 	    <activity
 		    android:name=".ui.SettingsActivity"
